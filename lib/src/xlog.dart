@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
@@ -6,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 import 'appender_mode.dart';
-import 'decode_nocrypt_log.dart';
+import 'decode_mars_nocrypt_log_file.dart';
 import 'mars_logging_plugin.dart';
 import 'xlog_channel.dart';
 import 'xlog_level.dart';
