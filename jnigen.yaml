@@ -1,0 +1,18 @@
+# Run with `dart run jnigen --config jnigen.yaml`.
+android_sdk_config:
+  add_gradle_deps: true
+  android_example: example/
+suspend_fun_to_async: true
+log_level: all
+output:
+  dart:
+    path: lib/src/jni/
+classes:
+  - android.app.Activity
+  - android.content.Context
+  - androidx.core.app.ActivityCompat
+  - androidx.core.app.ActivityOptionsCompat
+  - androidx.core.content.ContextCompat
+  - com.tencent.mars.xlog.Log
+  - com.tencent.mars.xlog.Xlog
+  - java.io.File

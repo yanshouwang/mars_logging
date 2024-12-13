@@ -1,0 +1,4 @@
+enum AppenderMode {
+  async,
+  sync,
+}
