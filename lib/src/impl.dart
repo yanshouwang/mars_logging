@@ -29,6 +29,21 @@ final class DirsChannelImpl implements DirsChannel {
   DirsChannelImpl._();
 
   @override
+  List<String> get externalFilesDirs {
+    final jType = jni.JString.fromReference(jni.jNullReference);
+    final jDirs = jni.context.getExternalFilesDirs(jType);
+    final dirs = <String>[];
+    for (var i = 0; i < jDirs.length; i++) {
+      final jDir = jDirs[i];
+      final dir = jDir.getAbsolutePath().toDartString(
+            releaseOriginal: true,
+          );
+      dirs.add(dir);
+    }
+    return dirs;
+  }
+
+  @override
   String? get externalFilesDir {
     final jType = jni.JString.fromReference(jni.jNullReference);
     final jDir = jni.context.getExternalFilesDir(jType);
@@ -42,6 +57,12 @@ final class DirsChannelImpl implements DirsChannel {
   @override
   String get filesDir =>
       jni.context.getFilesDir().getAbsolutePath().toDartString(
+            releaseOriginal: true,
+          );
+
+  @override
+  String get storageDir =>
+      jni.Environment.getStorageDirectory().getAbsolutePath().toDartString(
             releaseOriginal: true,
           );
 }

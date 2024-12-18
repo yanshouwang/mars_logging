@@ -10,6 +10,7 @@ output:
 classes:
   - android.app.Activity
   - android.content.Context
+  - android.os.Environment
   - androidx.core.app.ActivityCompat
   - androidx.core.app.ActivityOptionsCompat
   - androidx.core.content.ContextCompat

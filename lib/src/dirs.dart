@@ -12,4 +12,9 @@ abstract final class Dirs {
     final path = _channel.externalFilesDir;
     return path == null ? null : Directory(path);
   }
+
+  static List<Directory> get externalFilesDirs =>
+      _channel.externalFilesDirs.map((dir) => Directory(dir)).toList();
+
+  static Directory get storageDir => Directory(_channel.storageDir);
 }
