@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -155,7 +156,7 @@ int decodeBuffer(Uint8List buffer, int offset, List<int> outBuffer) {
     switch (magicStart) {
       case MAGIC_NO_COMPRESS_START1:
       case MAGIC_COMPRESS_START2:
-        print("use wrong decode script");
+        log("use wrong decode script");
         break;
       case MAGIC_COMPRESS_START:
       case MAGIC_COMPRESS_NO_CRYPT_START:
