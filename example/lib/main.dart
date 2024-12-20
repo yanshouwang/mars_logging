@@ -57,22 +57,22 @@ class _MyAppState extends State<MyApp> {
         GoRoute(
           path: '/',
           builder: (context, state) => ViewModelBinding(
-            viewBuilder: (context) => const HomeView(),
-            viewModelBuilder: (context) => HomeViewModel(),
+            viewBuilder: () => const HomeView(),
+            viewModelBuilder: () => HomeViewModel(),
           ),
           routes: [
             GoRoute(
               path: 'logs',
               builder: (context, state) => ViewModelBinding(
-                viewBuilder: (context) => const LogsView(),
-                viewModelBuilder: (context) => LogsViewModel(),
+                viewBuilder: () => const LogsView(),
+                viewModelBuilder: () => LogsViewModel(),
               ),
               routes: [
                 GoRoute(
                   path: ':logName',
                   builder: (context, state) => ViewModelBinding(
-                    viewBuilder: (context) => const LogView(),
-                    viewModelBuilder: (context) {
+                    viewBuilder: () => const LogView(),
+                    viewModelBuilder: () {
                       final logName = state.pathParameters['logName'];
                       if (logName == null) {
                         throw ArgumentError.notNull();
