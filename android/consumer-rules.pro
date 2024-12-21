@@ -1,1 +1,4 @@
+-keep class androidx.core.app.ActivityCompat { *; }
+-keep class androidx.core.app.ActivityOptionsCompat { *; }
+-keep class androidx.core.content.ContextCompat { *; }
 -keep class com.tencent.mars.xlog.** { *; }
