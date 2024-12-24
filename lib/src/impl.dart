@@ -35,6 +35,9 @@ final class DirsChannelImpl implements DirsChannel {
     final dirs = <String>[];
     for (var i = 0; i < jDirs.length; i++) {
       final jDir = jDirs[i];
+      if (jDir.isNull) {
+        continue;
+      }
       final dir = jDir.getAbsolutePath().toDartString(
             releaseOriginal: true,
           );
@@ -55,10 +58,11 @@ final class DirsChannelImpl implements DirsChannel {
   }
 
   @override
-  String get filesDir =>
-      jni.context.getFilesDir().getAbsolutePath().toDartString(
-            releaseOriginal: true,
-          );
+  String get filesDir {
+    return jni.context.getFilesDir().getAbsolutePath().toDartString(
+          releaseOriginal: true,
+        );
+  }
 
   @override
   String get storageDir =>
