@@ -251,6 +251,9 @@ class Context extends _$jni.JObject {
   /// from: `static public final int BIND_NOT_PERCEPTIBLE`
   static const BIND_NOT_PERCEPTIBLE = 256;
 
+  /// from: `static public final int BIND_PACKAGE_ISOLATED_PROCESS`
+  static const BIND_PACKAGE_ISOLATED_PROCESS = 16384;
+
   /// from: `static public final int BIND_SHARED_ISOLATED_PROCESS`
   static const BIND_SHARED_ISOLATED_PROCESS = 8192;
 
@@ -376,6 +379,16 @@ class Context extends _$jni.JObject {
   /// The returned object must be released after use, by calling the [release] method.
   static _$jni.JString get CONSUMER_IR_SERVICE =>
       _id_CONSUMER_IR_SERVICE.get(_class, const _$jni.JStringType());
+
+  static final _id_CONTACT_KEYS_SERVICE = _class.staticFieldId(
+    r'CONTACT_KEYS_SERVICE',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `static public final java.lang.String CONTACT_KEYS_SERVICE`
+  /// The returned object must be released after use, by calling the [release] method.
+  static _$jni.JString get CONTACT_KEYS_SERVICE =>
+      _id_CONTACT_KEYS_SERVICE.get(_class, const _$jni.JStringType());
 
   /// from: `static public final int CONTEXT_IGNORE_SECURITY`
   static const CONTEXT_IGNORE_SECURITY = 2;
@@ -790,6 +803,16 @@ class Context extends _$jni.JObject {
   static _$jni.JString get PERFORMANCE_HINT_SERVICE =>
       _id_PERFORMANCE_HINT_SERVICE.get(_class, const _$jni.JStringType());
 
+  static final _id_PERSISTENT_DATA_BLOCK_SERVICE = _class.staticFieldId(
+    r'PERSISTENT_DATA_BLOCK_SERVICE',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `static public final java.lang.String PERSISTENT_DATA_BLOCK_SERVICE`
+  /// The returned object must be released after use, by calling the [release] method.
+  static _$jni.JString get PERSISTENT_DATA_BLOCK_SERVICE =>
+      _id_PERSISTENT_DATA_BLOCK_SERVICE.get(_class, const _$jni.JStringType());
+
   static final _id_POWER_SERVICE = _class.staticFieldId(
     r'POWER_SERVICE',
     r'Ljava/lang/String;',
@@ -809,6 +832,16 @@ class Context extends _$jni.JObject {
   /// The returned object must be released after use, by calling the [release] method.
   static _$jni.JString get PRINT_SERVICE =>
       _id_PRINT_SERVICE.get(_class, const _$jni.JStringType());
+
+  static final _id_PROFILING_SERVICE = _class.staticFieldId(
+    r'PROFILING_SERVICE',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `static public final java.lang.String PROFILING_SERVICE`
+  /// The returned object must be released after use, by calling the [release] method.
+  static _$jni.JString get PROFILING_SERVICE =>
+      _id_PROFILING_SERVICE.get(_class, const _$jni.JStringType());
 
   /// from: `static public final int RECEIVER_EXPORTED`
   static const RECEIVER_EXPORTED = 2;
@@ -847,6 +880,16 @@ class Context extends _$jni.JObject {
   /// The returned object must be released after use, by calling the [release] method.
   static _$jni.JString get SEARCH_SERVICE =>
       _id_SEARCH_SERVICE.get(_class, const _$jni.JStringType());
+
+  static final _id_SECURITY_STATE_SERVICE = _class.staticFieldId(
+    r'SECURITY_STATE_SERVICE',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `static public final java.lang.String SECURITY_STATE_SERVICE`
+  /// The returned object must be released after use, by calling the [release] method.
+  static _$jni.JString get SECURITY_STATE_SERVICE =>
+      _id_SECURITY_STATE_SERVICE.get(_class, const _$jni.JStringType());
 
   static final _id_SENSOR_SERVICE = _class.staticFieldId(
     r'SENSOR_SERVICE',
@@ -5019,6 +5062,50 @@ class Context extends _$jni.JObject {
     return _checkUriPermission(
             reference.pointer,
             _id_checkUriPermission as _$jni.JMethodIDPtr,
+            uri.reference.pointer,
+            i,
+            i1,
+            i2)
+        .integer;
+  }
+
+  static final _id_checkContentUriPermissionFull = _class.instanceMethodId(
+    r'checkContentUriPermissionFull',
+    r'(Landroid/net/Uri;III)I',
+  );
+
+  static final _checkContentUriPermissionFull =
+      _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JniResult Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<
+                          (
+                            _$jni.Pointer<_$jni.Void>,
+                            _$jni.Int32,
+                            _$jni.Int32,
+                            _$jni.Int32
+                          )>)>>('globalEnv_CallIntMethod')
+          .asFunction<
+              _$jni.JniResult Function(
+                  _$jni.Pointer<_$jni.Void>,
+                  _$jni.JMethodIDPtr,
+                  _$jni.Pointer<_$jni.Void>,
+                  int,
+                  int,
+                  int)>();
+
+  /// from: `public int checkContentUriPermissionFull(android.net.Uri uri, int i, int i1, int i2)`
+  int checkContentUriPermissionFull(
+    _$jni.JObject uri,
+    int i,
+    int i1,
+    int i2,
+  ) {
+    return _checkContentUriPermissionFull(
+            reference.pointer,
+            _id_checkContentUriPermissionFull as _$jni.JMethodIDPtr,
             uri.reference.pointer,
             i,
             i1,

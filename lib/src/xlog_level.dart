@@ -1,5 +1,4 @@
 enum XlogLevel {
-  all,
   verbose,
   debug,
   info,

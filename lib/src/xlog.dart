@@ -13,43 +13,59 @@ import 'xlog_level.dart';
 abstract interface class Xlog {
   static XlogChannel get _channel => MarsLoggingPlugin.instance.xlogChannel;
 
-  static setLogLevel(XlogLevel logLevel) => _channel.setLogLevel(logLevel);
-  static setAppenderMode(AppenderMode mode) => _channel.setAppenderMode(mode);
-  static setConsoleLogOpen(bool isOpen) => _channel.setConsoleLogOpen(isOpen);
-  static setErrLogOpen(bool isOpen) => _channel.setErrLogOpen(isOpen);
-  static setMaxFileSize(int size) => _channel.setMaxFileSize(size);
-  static setMaxAliveTime(int duration) => _channel.setMaxAliveTime(duration);
+  static XlogLevel get logLevel => _channel.getLogLevel();
+  static set logLevel(XlogLevel value) => _channel.setLevel(value, false);
 
-  static void appenderOpen({
-    XlogLevel level = XlogLevel.all,
+  static set useConsole(bool value) => _channel.setConsoleLogOpen(value);
+
+  static void open({
+    XlogLevel level = XlogLevel.verbose,
     AppenderMode mode = AppenderMode.async,
     required String cacheDir,
     required String logDir,
     String nameprefix = '',
     int cacheDays = 0,
-    String pubKey = '',
   }) {
-    _channel.appenderOpen(
-      level: level,
-      mode: mode,
-      cacheDir: cacheDir,
-      logDir: logDir,
-      nameprefix: nameprefix,
-      cacheDays: cacheDays,
-      pubKey: pubKey,
-    );
+    _channel.appenderOpen(level, mode, cacheDir, logDir, nameprefix, cacheDays);
   }
 
-  static void appenderClose() {
+  static void close() {
     _channel.appenderClose();
   }
 
-  static void appenderFlush(bool isSync) {
-    _channel.appenderFlush(isSync);
+  static void flush() {
+    _channel.appenderFlush();
   }
 
   static void onRecord(LogRecord record) {
-    _channel.onRecord(record);
+    final level = record.level;
+    final tag = record.loggerName;
+    final messageBuilder = StringBuffer();
+    messageBuilder.write(record.message);
+    final error = record.error;
+    if (error != null) {
+      messageBuilder.writeln();
+      messageBuilder.write(error);
+    }
+    final stackTrace = record.stackTrace;
+    if (stackTrace != null) {
+      messageBuilder.writeln();
+      messageBuilder.write(stackTrace);
+    }
+    final message = messageBuilder.toString();
+    if (level >= Level.SHOUT) {
+      _channel.f(tag, message);
+    } else if (level >= Level.SEVERE) {
+      _channel.e(tag, message);
+    } else if (level >= Level.WARNING) {
+      _channel.w(tag, message);
+    } else if (level >= Level.INFO) {
+      _channel.i(tag, message);
+    } else if (level >= Level.CONFIG) {
+      _channel.d(tag, message);
+    } else {
+      _channel.v(tag, message);
+    }
   }
 
   static Future<Uint8List> decode(Uint8List buffer) {
@@ -58,9 +74,7 @@ abstract interface class Xlog {
       if (startPos == -1) {
         throw ArgumentError.value(startPos);
       }
-
       final outBuffer = <int>[];
-
       var currentPos = startPos;
       while (true) {
         currentPos = decodeBuffer(buffer, currentPos, outBuffer);
@@ -68,7 +82,6 @@ abstract interface class Xlog {
           break;
         }
       }
-
       return Uint8List.fromList(outBuffer);
     });
   }

@@ -16,28 +16,28 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // init xlog
+        val xlog = Xlog()
+        Log.setLogImp(xlog)
+
+        // set up xlog
         val filesDir = this.filesDir
         val externalFilesDir = getExternalFilesDir(null) ?: filesDir
 
-        // set up xlog
         val cacheDir = filesDir.absolutePath + "/xlog"
         val logDir = externalFilesDir.absolutePath + "/log"
         val nameprefix = "log"
         if (BuildConfig.DEBUG) {
-            Xlog.setConsoleLogOpen(true)
-            Xlog.appenderOpen(
-                Xlog.LEVEL_DEBUG, Xlog.AppednerModeAsync, cacheDir, logDir, nameprefix, 0, ""
+            Log.setConsoleLogOpen(true)
+            Log.appenderOpen(
+                Xlog.LEVEL_DEBUG, Xlog.AppednerModeAsync, cacheDir, logDir, nameprefix, 0
             )
         } else {
-            Xlog.setConsoleLogOpen(false)
-            Xlog.appenderOpen(
-                Xlog.LEVEL_INFO, Xlog.AppednerModeAsync, cacheDir, logDir, nameprefix, 0, ""
+            Log.setConsoleLogOpen(false)
+            Log.appenderOpen(
+                Xlog.LEVEL_INFO, Xlog.AppednerModeAsync, cacheDir, logDir, nameprefix, 0
             )
         }
-
-        // init xlog
-        val xlog = Xlog()
-        Log.setLogImp(xlog)
 
         Log.d("MainActivity", "Hello World!")
     }

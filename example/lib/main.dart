@@ -1,5 +1,5 @@
-// import 'package:flutter/foundation.dart';
 import 'package:clover/clover.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -16,16 +16,16 @@ void main() {
   // final logDir = path.join(externalFilesDir.path, 'log');
   // const nameprefix = 'log';
   // if (kDebugMode) {
-  //   Xlog.setConsoleLogOpen(true);
-  //   Xlog.appenderOpen(
+  //   Xlog.useConsole = true;
+  //   Xlog.open(
   //     level: XlogLevel.debug,
   //     cacheDir: cacheDir,
   //     logDir: logDir,
   //     nameprefix: nameprefix,
   //   );
   // } else {
-  //   Xlog.setConsoleLogOpen(false);
-  //   Xlog.appenderOpen(
+  //   Xlog.useConsole = false;
+  //   Xlog.open(
   //     level: XlogLevel.info,
   //     cacheDir: cacheDir,
   //     logDir: logDir,

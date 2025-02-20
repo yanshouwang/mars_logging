@@ -1,5 +1,4 @@
 import 'package:jni/jni.dart' as jni;
-import 'package:logging/logging.dart';
 
 import 'appender_mode.dart';
 import 'dirs_channel.dart';
@@ -77,6 +76,9 @@ final class XlogChannelImpl implements XlogChannel {
   factory XlogChannelImpl() {
     var instance = _instance;
     if (instance == null) {
+      // init xlog
+      final logImpl = jni.Xlog().as(jni.Log_LogImp.type);
+      jni.Log.setLogImp(logImpl);
       _instance = instance = XlogChannelImpl._();
     }
     return instance;
@@ -85,9 +87,16 @@ final class XlogChannelImpl implements XlogChannel {
   XlogChannelImpl._();
 
   @override
-  void setLogLevel(XlogLevel logLevel) {
-    final jLogLevel = logLevel.toJXlogLevel();
-    jni.Xlog.setLogLevel(jLogLevel);
+  void appenderOpen(XlogLevel level, AppenderMode mode, String cacheDir,
+      String logDir, String nameprefix, int cacheDays) {
+    final jLevel = level.toJLogLevel();
+    final jMode = mode.toJAppenderMode();
+    final jCacheDir = cacheDir.toJString();
+    final jLogDir = logDir.toJString();
+    final jNameprefix = nameprefix.toJString();
+    final jCacheDays = cacheDays;
+    jni.Log.appenderOpen(
+        jLevel, jMode, jCacheDir, jLogDir, jNameprefix, jCacheDays);
   }
 
   @override
@@ -96,92 +105,72 @@ final class XlogChannelImpl implements XlogChannel {
   }
 
   @override
-  void appenderFlush(bool isSync) {
-    jni.Log.appenderFlush(isSync);
+  void appenderFlush() {
+    jni.Log.appenderFlush();
   }
 
   @override
-  void setAppenderMode(AppenderMode mode) {
-    final jMode = mode.toJAppenderMode();
-    jni.Xlog.setAppenderMode(jMode);
+  void appenderFlushSync(bool isSync) {
+    jni.Log.appenderFlushSync(isSync);
   }
 
   @override
-  void appenderOpen({
-    required XlogLevel level,
-    required AppenderMode mode,
-    required String cacheDir,
-    required String logDir,
-    required String nameprefix,
-    required int cacheDays,
-    required String pubKey,
-  }) {
-    jni.Xlog.appenderOpen(
-      level.toJXlogLevel(),
-      mode.toJAppenderMode(),
-      cacheDir.toJString(),
-      logDir.toJString(),
-      nameprefix.toJString(),
-      cacheDays,
-      pubKey.toJString(),
-    );
-    // init xlog
-    final logImpl = jni.Xlog().as(jni.Log_LogImp.type);
-    jni.Log.setLogImp(logImpl);
+  XlogLevel getLogLevel() {
+    final jLevel = jni.Log.getLogLevel();
+    return jLevel.toXlogLevel();
+  }
+
+  @override
+  void setLevel(XlogLevel level, bool $jni) {
+    final jLevel = level.toJLogLevel();
+    jni.Log.setLevel(jLevel, $jni);
   }
 
   @override
   void setConsoleLogOpen(bool isOpen) {
-    jni.Xlog.setConsoleLogOpen(isOpen);
+    jni.Log.setConsoleLogOpen(isOpen);
   }
 
   @override
-  void setErrLogOpen(bool isOpen) {
-    jni.Xlog.setErrLogOpen(isOpen);
+  void d(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.d(jTag, jMsg);
   }
 
   @override
-  void setMaxAliveTime(int duration) {
-    jni.Xlog.setMaxAliveTime(duration);
+  void e(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.e(jTag, jMsg);
   }
 
   @override
-  void setMaxFileSize(int size) {
-    jni.Xlog.setMaxFileSize(size);
+  void f(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.f(jTag, jMsg);
   }
 
   @override
-  void onRecord(LogRecord record) {
-    final level = record.level;
-    final loggerName = record.loggerName;
-    final message = record.message;
-    final error = record.error;
-    final stackTrace = record.stackTrace;
-    final jName = loggerName.toJString();
-    final valueBuilder = StringBuffer();
-    valueBuilder.write(message);
-    if (error != null) {
-      valueBuilder.writeln();
-      valueBuilder.write(error);
-    }
-    if (stackTrace != null) {
-      valueBuilder.writeln();
-      valueBuilder.write(stackTrace);
-    }
-    final jValue = valueBuilder.toString().toJString();
-    if (level >= Level.SHOUT) {
-      jni.Log.f(jName, jValue);
-    } else if (level >= Level.SEVERE) {
-      jni.Log.e(jName, jValue);
-    } else if (level >= Level.WARNING) {
-      jni.Log.w(jName, jValue);
-    } else if (level >= Level.INFO) {
-      jni.Log.i(jName, jValue);
-    } else if (level >= Level.CONFIG) {
-      jni.Log.d(jName, jValue);
-    } else {
-      jni.Log.v(jName, jValue);
-    }
+  void i(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.i(jTag, jMsg);
+  }
+
+  @override
+  void v(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.v(jTag, jMsg);
+  }
+
+  @override
+  void w(String tag, String msg) {
+    final jTag = tag.toJString();
+    final jMsg = msg.toJString();
+    jni.Log.w(jTag, jMsg);
   }
 }
 
@@ -197,24 +186,45 @@ extension on AppenderMode {
 }
 
 extension on XlogLevel {
-  int toJXlogLevel() {
+  int toJLogLevel() {
     switch (this) {
-      case XlogLevel.all:
-        return jni.Xlog.LEVEL_ALL;
       case XlogLevel.verbose:
-        return jni.Xlog.LEVEL_VERBOSE;
+        return jni.Log.LEVEL_VERBOSE;
       case XlogLevel.debug:
-        return jni.Xlog.LEVEL_DEBUG;
+        return jni.Log.LEVEL_DEBUG;
       case XlogLevel.info:
-        return jni.Xlog.LEVEL_INFO;
+        return jni.Log.LEVEL_INFO;
       case XlogLevel.warning:
-        return jni.Xlog.LEVEL_WARNING;
+        return jni.Log.LEVEL_WARNING;
       case XlogLevel.error:
-        return jni.Xlog.LEVEL_ERROR;
+        return jni.Log.LEVEL_ERROR;
       case XlogLevel.fatal:
-        return jni.Xlog.LEVEL_FATAL;
+        return jni.Log.LEVEL_FATAL;
       case XlogLevel.none:
-        return jni.Xlog.LEVEL_NONE;
+        return jni.Log.LEVEL_NONE;
+    }
+  }
+}
+
+extension on int {
+  XlogLevel toXlogLevel() {
+    switch (this) {
+      case jni.Log.LEVEL_VERBOSE:
+        return XlogLevel.verbose;
+      case jni.Log.LEVEL_DEBUG:
+        return XlogLevel.debug;
+      case jni.Log.LEVEL_INFO:
+        return XlogLevel.info;
+      case jni.Log.LEVEL_WARNING:
+        return XlogLevel.warning;
+      case jni.Log.LEVEL_ERROR:
+        return XlogLevel.error;
+      case jni.Log.LEVEL_FATAL:
+        return XlogLevel.fatal;
+      case jni.Log.LEVEL_NONE:
+        return XlogLevel.none;
+      default:
+        throw ArgumentError.value(this);
     }
   }
 }

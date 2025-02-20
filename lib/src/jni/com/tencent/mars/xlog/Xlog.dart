@@ -34,6 +34,195 @@ import 'dart:core' as _$core;
 import 'package:jni/_internal.dart' as _$jni;
 import 'package:jni/jni.dart' as _$jni;
 
+/// from: `com.tencent.mars.xlog.Xlog$XLogConfig`
+class Xlog_XLogConfig extends _$jni.JObject {
+  @_$jni.internal
+  @_$core.override
+  final _$jni.JObjType<Xlog_XLogConfig> $type;
+
+  @_$jni.internal
+  Xlog_XLogConfig.fromReference(
+    _$jni.JReference reference,
+  )   : $type = type,
+        super.fromReference(reference);
+
+  static final _class =
+      _$jni.JClass.forName(r'com/tencent/mars/xlog/Xlog$XLogConfig');
+
+  /// The type which includes information such as the signature of this class.
+  static const type = $Xlog_XLogConfig$Type();
+  static final _id_level = _class.instanceFieldId(
+    r'level',
+    r'I',
+  );
+
+  /// from: `public int level`
+  int get level => _id_level.get(this, const _$jni.jintType());
+
+  /// from: `public int level`
+  set level(int value) => _id_level.set(this, const _$jni.jintType(), value);
+
+  static final _id_mode = _class.instanceFieldId(
+    r'mode',
+    r'I',
+  );
+
+  /// from: `public int mode`
+  int get mode => _id_mode.get(this, const _$jni.jintType());
+
+  /// from: `public int mode`
+  set mode(int value) => _id_mode.set(this, const _$jni.jintType(), value);
+
+  static final _id_logdir = _class.instanceFieldId(
+    r'logdir',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `public java.lang.String logdir`
+  /// The returned object must be released after use, by calling the [release] method.
+  _$jni.JString get logdir => _id_logdir.get(this, const _$jni.JStringType());
+
+  /// from: `public java.lang.String logdir`
+  /// The returned object must be released after use, by calling the [release] method.
+  set logdir(_$jni.JString value) =>
+      _id_logdir.set(this, const _$jni.JStringType(), value);
+
+  static final _id_nameprefix = _class.instanceFieldId(
+    r'nameprefix',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `public java.lang.String nameprefix`
+  /// The returned object must be released after use, by calling the [release] method.
+  _$jni.JString get nameprefix =>
+      _id_nameprefix.get(this, const _$jni.JStringType());
+
+  /// from: `public java.lang.String nameprefix`
+  /// The returned object must be released after use, by calling the [release] method.
+  set nameprefix(_$jni.JString value) =>
+      _id_nameprefix.set(this, const _$jni.JStringType(), value);
+
+  static final _id_pubkey = _class.instanceFieldId(
+    r'pubkey',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `public java.lang.String pubkey`
+  /// The returned object must be released after use, by calling the [release] method.
+  _$jni.JString get pubkey => _id_pubkey.get(this, const _$jni.JStringType());
+
+  /// from: `public java.lang.String pubkey`
+  /// The returned object must be released after use, by calling the [release] method.
+  set pubkey(_$jni.JString value) =>
+      _id_pubkey.set(this, const _$jni.JStringType(), value);
+
+  static final _id_compressmode = _class.instanceFieldId(
+    r'compressmode',
+    r'I',
+  );
+
+  /// from: `public int compressmode`
+  int get compressmode => _id_compressmode.get(this, const _$jni.jintType());
+
+  /// from: `public int compressmode`
+  set compressmode(int value) =>
+      _id_compressmode.set(this, const _$jni.jintType(), value);
+
+  static final _id_compresslevel = _class.instanceFieldId(
+    r'compresslevel',
+    r'I',
+  );
+
+  /// from: `public int compresslevel`
+  int get compresslevel => _id_compresslevel.get(this, const _$jni.jintType());
+
+  /// from: `public int compresslevel`
+  set compresslevel(int value) =>
+      _id_compresslevel.set(this, const _$jni.jintType(), value);
+
+  static final _id_cachedir = _class.instanceFieldId(
+    r'cachedir',
+    r'Ljava/lang/String;',
+  );
+
+  /// from: `public java.lang.String cachedir`
+  /// The returned object must be released after use, by calling the [release] method.
+  _$jni.JString get cachedir =>
+      _id_cachedir.get(this, const _$jni.JStringType());
+
+  /// from: `public java.lang.String cachedir`
+  /// The returned object must be released after use, by calling the [release] method.
+  set cachedir(_$jni.JString value) =>
+      _id_cachedir.set(this, const _$jni.JStringType(), value);
+
+  static final _id_cachedays = _class.instanceFieldId(
+    r'cachedays',
+    r'I',
+  );
+
+  /// from: `public int cachedays`
+  int get cachedays => _id_cachedays.get(this, const _$jni.jintType());
+
+  /// from: `public int cachedays`
+  set cachedays(int value) =>
+      _id_cachedays.set(this, const _$jni.jintType(), value);
+
+  static final _id_new$ = _class.constructorId(
+    r'()V',
+  );
+
+  static final _new$ = _$jni.ProtectedJniExtensions.lookup<
+          _$jni.NativeFunction<
+              _$jni.JniResult Function(
+                _$jni.Pointer<_$jni.Void>,
+                _$jni.JMethodIDPtr,
+              )>>('globalEnv_NewObject')
+      .asFunction<
+          _$jni.JniResult Function(
+            _$jni.Pointer<_$jni.Void>,
+            _$jni.JMethodIDPtr,
+          )>();
+
+  /// from: `public void <init>()`
+  /// The returned object must be released after use, by calling the [release] method.
+  factory Xlog_XLogConfig() {
+    return Xlog_XLogConfig.fromReference(
+        _new$(_class.reference.pointer, _id_new$ as _$jni.JMethodIDPtr)
+            .reference);
+  }
+}
+
+final class $Xlog_XLogConfig$Type extends _$jni.JObjType<Xlog_XLogConfig> {
+  @_$jni.internal
+  const $Xlog_XLogConfig$Type();
+
+  @_$jni.internal
+  @_$core.override
+  String get signature => r'Lcom/tencent/mars/xlog/Xlog$XLogConfig;';
+
+  @_$jni.internal
+  @_$core.override
+  Xlog_XLogConfig fromReference(_$jni.JReference reference) =>
+      Xlog_XLogConfig.fromReference(reference);
+
+  @_$jni.internal
+  @_$core.override
+  _$jni.JObjType get superType => const _$jni.JObjectType();
+
+  @_$jni.internal
+  @_$core.override
+  final superCount = 1;
+
+  @_$core.override
+  int get hashCode => ($Xlog_XLogConfig$Type).hashCode;
+
+  @_$core.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($Xlog_XLogConfig$Type) &&
+        other is $Xlog_XLogConfig$Type;
+  }
+}
+
 /// from: `com.tencent.mars.xlog.Xlog`
 class Xlog extends _$jni.JObject {
   @_$jni.internal
@@ -75,11 +264,44 @@ class Xlog extends _$jni.JObject {
   /// from: `static public final int LEVEL_NONE`
   static const LEVEL_NONE = 6;
 
+  /// from: `static public final int COMPRESS_LEVEL1`
+  static const COMPRESS_LEVEL1 = 1;
+
+  /// from: `static public final int COMPRESS_LEVEL2`
+  static const COMPRESS_LEVEL2 = 2;
+
+  /// from: `static public final int COMPRESS_LEVEL3`
+  static const COMPRESS_LEVEL3 = 3;
+
+  /// from: `static public final int COMPRESS_LEVEL4`
+  static const COMPRESS_LEVEL4 = 4;
+
+  /// from: `static public final int COMPRESS_LEVEL5`
+  static const COMPRESS_LEVEL5 = 5;
+
+  /// from: `static public final int COMPRESS_LEVEL6`
+  static const COMPRESS_LEVEL6 = 6;
+
+  /// from: `static public final int COMPRESS_LEVEL7`
+  static const COMPRESS_LEVEL7 = 7;
+
+  /// from: `static public final int COMPRESS_LEVEL8`
+  static const COMPRESS_LEVEL8 = 8;
+
+  /// from: `static public final int COMPRESS_LEVEL9`
+  static const COMPRESS_LEVEL9 = 9;
+
   /// from: `static public final int AppednerModeAsync`
   static const AppednerModeAsync = 0;
 
   /// from: `static public final int AppednerModeSync`
   static const AppednerModeSync = 1;
+
+  /// from: `static public final int ZLIB_MODE`
+  static const ZLIB_MODE = 0;
+
+  /// from: `static public final int ZSTD_MODE`
+  static const ZSTD_MODE = 1;
   static final _id_new$ = _class.constructorId(
     r'()V',
   );
@@ -161,7 +383,7 @@ class Xlog extends _$jni.JObject {
 
   static final _id_logV = _class.instanceMethodId(
     r'logV',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logV = _$jni.ProtectedJniExtensions.lookup<
@@ -171,6 +393,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -184,6 +407,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -193,34 +417,36 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logV(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logV(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logV(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logV(
             reference.pointer,
             _id_logV as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
         .check();
   }
 
   static final _id_logD = _class.instanceMethodId(
     r'logD',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logD = _$jni.ProtectedJniExtensions.lookup<
@@ -230,6 +456,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -243,6 +470,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -252,34 +480,36 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logD(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logD(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logD(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logD(
             reference.pointer,
             _id_logD as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
         .check();
   }
 
   static final _id_logI = _class.instanceMethodId(
     r'logI',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logI = _$jni.ProtectedJniExtensions.lookup<
@@ -289,6 +519,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -302,6 +533,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -311,34 +543,36 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logI(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logI(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logI(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logI(
             reference.pointer,
             _id_logI as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
         .check();
   }
 
   static final _id_logW = _class.instanceMethodId(
     r'logW',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logW = _$jni.ProtectedJniExtensions.lookup<
@@ -348,6 +582,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -361,6 +596,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -370,34 +606,36 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logW(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logW(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logW(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logW(
             reference.pointer,
             _id_logW as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
         .check();
   }
 
   static final _id_logE = _class.instanceMethodId(
     r'logE',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logE = _$jni.ProtectedJniExtensions.lookup<
@@ -407,6 +645,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -420,6 +659,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -429,34 +669,36 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logE(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logE(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logE(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logE(
             reference.pointer,
             _id_logE as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
         .check();
   }
 
   static final _id_logF = _class.instanceMethodId(
     r'logF',
-    r'(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
+    r'(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
   static final _logF = _$jni.ProtectedJniExtensions.lookup<
@@ -466,6 +708,7 @@ class Xlog extends _$jni.JObject {
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
@@ -479,6 +722,7 @@ class Xlog extends _$jni.JObject {
           _$jni.JThrowablePtr Function(
               _$jni.Pointer<_$jni.Void>,
               _$jni.JMethodIDPtr,
+              int,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
@@ -488,28 +732,81 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `public void logF(java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j, long j1, java.lang.String string3)`
+  /// from: `public void logF(long j, java.lang.String string, java.lang.String string1, java.lang.String string2, int i, int i1, long j1, long j2, java.lang.String string3)`
   void logF(
+    int j,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i,
     int i1,
-    int j,
     int j1,
+    int j2,
     _$jni.JString string3,
   ) {
     _logF(
             reference.pointer,
             _id_logF as _$jni.JMethodIDPtr,
+            j,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
             i,
             i1,
-            j,
             j1,
+            j2,
             string3.reference.pointer)
+        .check();
+  }
+
+  static final _id_appenderOpen = _class.instanceMethodId(
+    r'appenderOpen',
+    r'(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V',
+  );
+
+  static final _appenderOpen = _$jni.ProtectedJniExtensions.lookup<
+          _$jni.NativeFunction<
+              _$jni.JThrowablePtr Function(
+                  _$jni.Pointer<_$jni.Void>,
+                  _$jni.JMethodIDPtr,
+                  _$jni.VarArgs<
+                      (
+                        _$jni.Int32,
+                        _$jni.Int32,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Int32
+                      )>)>>('globalEnv_CallVoidMethod')
+      .asFunction<
+          _$jni.JThrowablePtr Function(
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.JMethodIDPtr,
+              int,
+              int,
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.Pointer<_$jni.Void>,
+              int)>();
+
+  /// from: `public void appenderOpen(int i, int i1, java.lang.String string, java.lang.String string1, java.lang.String string2, int i2)`
+  void appenderOpen(
+    int i,
+    int i1,
+    _$jni.JString string,
+    _$jni.JString string1,
+    _$jni.JString string2,
+    int i2,
+  ) {
+    _appenderOpen(
+            reference.pointer,
+            _id_appenderOpen as _$jni.JMethodIDPtr,
+            i,
+            i1,
+            string.reference.pointer,
+            string1.reference.pointer,
+            string2.reference.pointer,
+            i2)
         .check();
   }
 
@@ -581,7 +878,7 @@ class Xlog extends _$jni.JObject {
               int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `static public native void logWrite2(int i, java.lang.String string, java.lang.String string1, java.lang.String string2, int i1, int i2, long j, long j1, java.lang.String string3)`
+  /// from: `static public void logWrite2(int i, java.lang.String string, java.lang.String string1, java.lang.String string2, int i1, int i2, long j, long j1, java.lang.String string3)`
   static void logWrite2(
     int i,
     _$jni.JString string,
@@ -608,140 +905,27 @@ class Xlog extends _$jni.JObject {
         .check();
   }
 
-  static final _id_getLogLevel = _class.instanceMethodId(
-    r'getLogLevel',
-    r'()I',
+  static final _id_logWrite2$1 = _class.staticMethodId(
+    r'logWrite2',
+    r'(JILjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJLjava/lang/String;)V',
   );
 
-  static final _getLogLevel = _$jni.ProtectedJniExtensions.lookup<
-          _$jni.NativeFunction<
-              _$jni.JniResult Function(
-                _$jni.Pointer<_$jni.Void>,
-                _$jni.JMethodIDPtr,
-              )>>('globalEnv_CallIntMethod')
-      .asFunction<
-          _$jni.JniResult Function(
-            _$jni.Pointer<_$jni.Void>,
-            _$jni.JMethodIDPtr,
-          )>();
-
-  /// from: `public native int getLogLevel()`
-  int getLogLevel() {
-    return _getLogLevel(
-            reference.pointer, _id_getLogLevel as _$jni.JMethodIDPtr)
-        .integer;
-  }
-
-  static final _id_setLogLevel = _class.staticMethodId(
-    r'setLogLevel',
-    r'(I)V',
-  );
-
-  static final _setLogLevel = _$jni.ProtectedJniExtensions.lookup<
-              _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int32,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
-      .asFunction<
-          _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
-
-  /// from: `static public native void setLogLevel(int i)`
-  static void setLogLevel(
-    int i,
-  ) {
-    _setLogLevel(
-            _class.reference.pointer, _id_setLogLevel as _$jni.JMethodIDPtr, i)
-        .check();
-  }
-
-  static final _id_setAppenderMode = _class.staticMethodId(
-    r'setAppenderMode',
-    r'(I)V',
-  );
-
-  static final _setAppenderMode = _$jni.ProtectedJniExtensions.lookup<
-              _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int32,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
-      .asFunction<
-          _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
-
-  /// from: `static public native void setAppenderMode(int i)`
-  static void setAppenderMode(
-    int i,
-  ) {
-    _setAppenderMode(_class.reference.pointer,
-            _id_setAppenderMode as _$jni.JMethodIDPtr, i)
-        .check();
-  }
-
-  static final _id_setConsoleLogOpen = _class.staticMethodId(
-    r'setConsoleLogOpen',
-    r'(Z)V',
-  );
-
-  static final _setConsoleLogOpen = _$jni.ProtectedJniExtensions.lookup<
-              _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int32,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
-      .asFunction<
-          _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
-
-  /// from: `static public native void setConsoleLogOpen(boolean z)`
-  static void setConsoleLogOpen(
-    bool z,
-  ) {
-    _setConsoleLogOpen(_class.reference.pointer,
-            _id_setConsoleLogOpen as _$jni.JMethodIDPtr, z ? 1 : 0)
-        .check();
-  }
-
-  static final _id_setErrLogOpen = _class.staticMethodId(
-    r'setErrLogOpen',
-    r'(Z)V',
-  );
-
-  static final _setErrLogOpen = _$jni.ProtectedJniExtensions.lookup<
-              _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int32,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
-      .asFunction<
-          _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
-
-  /// from: `static public native void setErrLogOpen(boolean z)`
-  static void setErrLogOpen(
-    bool z,
-  ) {
-    _setErrLogOpen(_class.reference.pointer,
-            _id_setErrLogOpen as _$jni.JMethodIDPtr, z ? 1 : 0)
-        .check();
-  }
-
-  static final _id_appenderOpen = _class.staticMethodId(
-    r'appenderOpen',
-    r'(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V',
-  );
-
-  static final _appenderOpen = _$jni.ProtectedJniExtensions.lookup<
+  static final _logWrite2$1 = _$jni.ProtectedJniExtensions.lookup<
           _$jni.NativeFunction<
               _$jni.JThrowablePtr Function(
                   _$jni.Pointer<_$jni.Void>,
                   _$jni.JMethodIDPtr,
                   _$jni.VarArgs<
                       (
-                        _$jni.Int32,
+                        _$jni.Int64,
                         _$jni.Int32,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Pointer<_$jni.Void>,
                         _$jni.Int32,
+                        _$jni.Int32,
+                        _$jni.Int64,
+                        _$jni.Int64,
                         _$jni.Pointer<_$jni.Void>
                       )>)>>('globalEnv_CallStaticVoidMethod')
       .asFunction<
@@ -754,74 +938,243 @@ class Xlog extends _$jni.JObject {
               _$jni.Pointer<_$jni.Void>,
               _$jni.Pointer<_$jni.Void>,
               int,
+              int,
+              int,
+              int,
               _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `static public native void appenderOpen(int i, int i1, java.lang.String string, java.lang.String string1, java.lang.String string2, int i2, java.lang.String string3)`
-  static void appenderOpen(
+  /// from: `static public native void logWrite2(long j, int i, java.lang.String string, java.lang.String string1, java.lang.String string2, int i1, int i2, long j1, long j2, java.lang.String string3)`
+  static void logWrite2$1(
+    int j,
+    int i,
+    _$jni.JString string,
+    _$jni.JString string1,
+    _$jni.JString string2,
+    int i1,
+    int i2,
+    int j1,
+    int j2,
+    _$jni.JString string3,
+  ) {
+    _logWrite2$1(
+            _class.reference.pointer,
+            _id_logWrite2$1 as _$jni.JMethodIDPtr,
+            j,
+            i,
+            string.reference.pointer,
+            string1.reference.pointer,
+            string2.reference.pointer,
+            i1,
+            i2,
+            j1,
+            j2,
+            string3.reference.pointer)
+        .check();
+  }
+
+  static final _id_getLogLevel = _class.instanceMethodId(
+    r'getLogLevel',
+    r'(J)I',
+  );
+
+  static final _getLogLevel = _$jni.ProtectedJniExtensions.lookup<
+          _$jni.NativeFunction<
+              _$jni.JniResult Function(
+                  _$jni.Pointer<_$jni.Void>,
+                  _$jni.JMethodIDPtr,
+                  _$jni.VarArgs<(_$jni.Int64,)>)>>('globalEnv_CallIntMethod')
+      .asFunction<
+          _$jni.JniResult Function(
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
+
+  /// from: `public native int getLogLevel(long j)`
+  int getLogLevel(
+    int j,
+  ) {
+    return _getLogLevel(
+            reference.pointer, _id_getLogLevel as _$jni.JMethodIDPtr, j)
+        .integer;
+  }
+
+  static final _id_setAppenderMode = _class.instanceMethodId(
+    r'setAppenderMode',
+    r'(JI)V',
+  );
+
+  static final _setAppenderMode = _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Int64, _$jni.Int32)>)>>(
+          'globalEnv_CallVoidMethod')
+      .asFunction<
+          _$jni.JThrowablePtr Function(
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int, int)>();
+
+  /// from: `public native void setAppenderMode(long j, int i)`
+  void setAppenderMode(
+    int j,
+    int i,
+  ) {
+    _setAppenderMode(
+            reference.pointer, _id_setAppenderMode as _$jni.JMethodIDPtr, j, i)
+        .check();
+  }
+
+  static final _id_openLogInstance = _class.instanceMethodId(
+    r'openLogInstance',
+    r'(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)J',
+  );
+
+  static final _openLogInstance = _$jni.ProtectedJniExtensions.lookup<
+          _$jni.NativeFunction<
+              _$jni.JniResult Function(
+                  _$jni.Pointer<_$jni.Void>,
+                  _$jni.JMethodIDPtr,
+                  _$jni.VarArgs<
+                      (
+                        _$jni.Int32,
+                        _$jni.Int32,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Pointer<_$jni.Void>,
+                        _$jni.Int32
+                      )>)>>('globalEnv_CallLongMethod')
+      .asFunction<
+          _$jni.JniResult Function(
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.JMethodIDPtr,
+              int,
+              int,
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.Pointer<_$jni.Void>,
+              _$jni.Pointer<_$jni.Void>,
+              int)>();
+
+  /// from: `public long openLogInstance(int i, int i1, java.lang.String string, java.lang.String string1, java.lang.String string2, int i2)`
+  int openLogInstance(
     int i,
     int i1,
     _$jni.JString string,
     _$jni.JString string1,
     _$jni.JString string2,
     int i2,
-    _$jni.JString string3,
   ) {
-    _appenderOpen(
-            _class.reference.pointer,
-            _id_appenderOpen as _$jni.JMethodIDPtr,
+    return _openLogInstance(
+            reference.pointer,
+            _id_openLogInstance as _$jni.JMethodIDPtr,
             i,
             i1,
             string.reference.pointer,
             string1.reference.pointer,
             string2.reference.pointer,
-            i2,
-            string3.reference.pointer)
+            i2)
+        .long;
+  }
+
+  static final _id_getXlogInstance = _class.instanceMethodId(
+    r'getXlogInstance',
+    r'(Ljava/lang/String;)J',
+  );
+
+  static final _getXlogInstance = _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JniResult Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Pointer<_$jni.Void>,)>)>>(
+          'globalEnv_CallLongMethod')
+      .asFunction<
+          _$jni.JniResult Function(_$jni.Pointer<_$jni.Void>,
+              _$jni.JMethodIDPtr, _$jni.Pointer<_$jni.Void>)>();
+
+  /// from: `public native long getXlogInstance(java.lang.String string)`
+  int getXlogInstance(
+    _$jni.JString string,
+  ) {
+    return _getXlogInstance(reference.pointer,
+            _id_getXlogInstance as _$jni.JMethodIDPtr, string.reference.pointer)
+        .long;
+  }
+
+  static final _id_releaseXlogInstance = _class.instanceMethodId(
+    r'releaseXlogInstance',
+    r'(Ljava/lang/String;)V',
+  );
+
+  static final _releaseXlogInstance = _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Pointer<_$jni.Void>,)>)>>(
+          'globalEnv_CallVoidMethod')
+      .asFunction<
+          _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
+              _$jni.JMethodIDPtr, _$jni.Pointer<_$jni.Void>)>();
+
+  /// from: `public native void releaseXlogInstance(java.lang.String string)`
+  void releaseXlogInstance(
+    _$jni.JString string,
+  ) {
+    _releaseXlogInstance(
+            reference.pointer,
+            _id_releaseXlogInstance as _$jni.JMethodIDPtr,
+            string.reference.pointer)
         .check();
   }
 
-  static final _id_setMaxFileSize = _class.staticMethodId(
-    r'setMaxFileSize',
-    r'(J)V',
+  static final _id_newXlogInstance = _class.instanceMethodId(
+    r'newXlogInstance',
+    r'(Lcom/tencent/mars/xlog/Xlog$XLogConfig;)J',
   );
 
-  static final _setMaxFileSize = _$jni.ProtectedJniExtensions.lookup<
+  static final _newXlogInstance = _$jni.ProtectedJniExtensions.lookup<
               _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int64,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
+                  _$jni.JniResult Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Pointer<_$jni.Void>,)>)>>(
+          'globalEnv_CallLongMethod')
       .asFunction<
-          _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
+          _$jni.JniResult Function(_$jni.Pointer<_$jni.Void>,
+              _$jni.JMethodIDPtr, _$jni.Pointer<_$jni.Void>)>();
 
-  /// from: `static public native void setMaxFileSize(long j)`
-  static void setMaxFileSize(
-    int j,
+  /// from: `public native long newXlogInstance(com.tencent.mars.xlog.Xlog$XLogConfig xLogConfig)`
+  int newXlogInstance(
+    Xlog_XLogConfig xLogConfig,
   ) {
-    _setMaxFileSize(_class.reference.pointer,
-            _id_setMaxFileSize as _$jni.JMethodIDPtr, j)
-        .check();
+    return _newXlogInstance(
+            reference.pointer,
+            _id_newXlogInstance as _$jni.JMethodIDPtr,
+            xLogConfig.reference.pointer)
+        .long;
   }
 
-  static final _id_setMaxAliveTime = _class.staticMethodId(
-    r'setMaxAliveTime',
-    r'(J)V',
+  static final _id_setConsoleLogOpen = _class.instanceMethodId(
+    r'setConsoleLogOpen',
+    r'(JZ)V',
   );
 
-  static final _setMaxAliveTime = _$jni.ProtectedJniExtensions.lookup<
+  static final _setConsoleLogOpen = _$jni.ProtectedJniExtensions.lookup<
               _$jni.NativeFunction<
-                  _$jni.JThrowablePtr Function(_$jni.Pointer<_$jni.Void>,
-                      _$jni.JMethodIDPtr, _$jni.VarArgs<(_$jni.Int64,)>)>>(
-          'globalEnv_CallStaticVoidMethod')
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Int64, _$jni.Int32)>)>>(
+          'globalEnv_CallVoidMethod')
       .asFunction<
           _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int, int)>();
 
-  /// from: `static public native void setMaxAliveTime(long j)`
-  static void setMaxAliveTime(
+  /// from: `public native void setConsoleLogOpen(long j, boolean z)`
+  void setConsoleLogOpen(
     int j,
+    bool z,
   ) {
-    _setMaxAliveTime(_class.reference.pointer,
-            _id_setMaxAliveTime as _$jni.JMethodIDPtr, j)
+    _setConsoleLogOpen(reference.pointer,
+            _id_setConsoleLogOpen as _$jni.JMethodIDPtr, j, z ? 1 : 0)
         .check();
   }
 
@@ -850,25 +1203,79 @@ class Xlog extends _$jni.JObject {
 
   static final _id_appenderFlush = _class.instanceMethodId(
     r'appenderFlush',
-    r'(Z)V',
+    r'(JZ)V',
   );
 
   static final _appenderFlush = _$jni.ProtectedJniExtensions.lookup<
-          _$jni.NativeFunction<
-              _$jni.JThrowablePtr Function(
-                  _$jni.Pointer<_$jni.Void>,
-                  _$jni.JMethodIDPtr,
-                  _$jni.VarArgs<(_$jni.Int32,)>)>>('globalEnv_CallVoidMethod')
+              _$jni.NativeFunction<
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Int64, _$jni.Int32)>)>>(
+          'globalEnv_CallVoidMethod')
       .asFunction<
           _$jni.JThrowablePtr Function(
-              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int)>();
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int, int)>();
 
-  /// from: `public native void appenderFlush(boolean z)`
+  /// from: `public native void appenderFlush(long j, boolean z)`
   void appenderFlush(
+    int j,
     bool z,
   ) {
     _appenderFlush(reference.pointer, _id_appenderFlush as _$jni.JMethodIDPtr,
-            z ? 1 : 0)
+            j, z ? 1 : 0)
+        .check();
+  }
+
+  static final _id_setMaxFileSize = _class.instanceMethodId(
+    r'setMaxFileSize',
+    r'(JJ)V',
+  );
+
+  static final _setMaxFileSize = _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Int64, _$jni.Int64)>)>>(
+          'globalEnv_CallVoidMethod')
+      .asFunction<
+          _$jni.JThrowablePtr Function(
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int, int)>();
+
+  /// from: `public native void setMaxFileSize(long j, long j1)`
+  void setMaxFileSize(
+    int j,
+    int j1,
+  ) {
+    _setMaxFileSize(
+            reference.pointer, _id_setMaxFileSize as _$jni.JMethodIDPtr, j, j1)
+        .check();
+  }
+
+  static final _id_setMaxAliveTime = _class.instanceMethodId(
+    r'setMaxAliveTime',
+    r'(JJ)V',
+  );
+
+  static final _setMaxAliveTime = _$jni.ProtectedJniExtensions.lookup<
+              _$jni.NativeFunction<
+                  _$jni.JThrowablePtr Function(
+                      _$jni.Pointer<_$jni.Void>,
+                      _$jni.JMethodIDPtr,
+                      _$jni.VarArgs<(_$jni.Int64, _$jni.Int64)>)>>(
+          'globalEnv_CallVoidMethod')
+      .asFunction<
+          _$jni.JThrowablePtr Function(
+              _$jni.Pointer<_$jni.Void>, _$jni.JMethodIDPtr, int, int)>();
+
+  /// from: `public native void setMaxAliveTime(long j, long j1)`
+  void setMaxAliveTime(
+    int j,
+    int j1,
+  ) {
+    _setMaxAliveTime(
+            reference.pointer, _id_setMaxAliveTime as _$jni.JMethodIDPtr, j, j1)
         .check();
   }
 }
