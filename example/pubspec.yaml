@@ -1,11 +1,11 @@
 name: mars_logging_example
-description: 'Demonstrates how to use the mars_logging plugin.'
+description: "Demonstrates how to use the mars_logging plugin."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.7.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,9 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   logging: ^1.3.0
   hybrid_logging: ^1.0.0
-  path: ^1.9.0
   go_router: ^14.6.2
   clover: ^4.0.0
+  path: ^1.9.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   integration_test:
@@ -45,13 +46,14 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

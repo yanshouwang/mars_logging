@@ -1,4 +1,1 @@
-enum AppenderMode {
-  async,
-  sync,
-}
+export 'mars_logging.g.dart' show AppenderMode;

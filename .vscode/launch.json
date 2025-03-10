@@ -5,6 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "mars_logging",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "mars_logging (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "mars_logging (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
             "name": "example",
             "cwd": "example",
             "request": "launch",

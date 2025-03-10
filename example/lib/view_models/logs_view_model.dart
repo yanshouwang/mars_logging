@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:clover/clover.dart';
-import 'package:mars_logging/mars_logging.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as path;
 
 class LogsViewModel extends ViewModel {
   List<File> _logs;
@@ -14,8 +14,10 @@ class LogsViewModel extends ViewModel {
   List<File> get logs => List.unmodifiable(_logs);
 
   void _updateLogs() async {
-    final filesDir = Dirs.filesDir;
-    final externalFilesDir = Dirs.externalFilesDir ?? filesDir;
+    final externalFilesDir = await path.getExternalStorageDirectory();
+    if (externalFilesDir == null) {
+      return;
+    }
     final logsPath = path.join(externalFilesDir.path, 'log');
     final logDir = Directory(logsPath);
     final exists = await logDir.exists();

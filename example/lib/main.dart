@@ -1,5 +1,4 @@
 import 'package:clover/clover.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -7,33 +6,10 @@ import 'package:mars_logging/mars_logging.dart';
 
 import 'view_models.dart';
 import 'views.dart';
-// import 'package:path/path.dart' as path;
 
 void main() {
-  // final filesDir = Dirs.filesDir;
-  // final externalFilesDir = Dirs.externalFilesDir ?? filesDir;
-  // final cacheDir = path.join(filesDir.path, 'xlog');
-  // final logDir = path.join(externalFilesDir.path, 'log');
-  // const nameprefix = 'log';
-  // if (kDebugMode) {
-  //   Xlog.useConsole = true;
-  //   Xlog.open(
-  //     level: XlogLevel.debug,
-  //     cacheDir: cacheDir,
-  //     logDir: logDir,
-  //     nameprefix: nameprefix,
-  //   );
-  // } else {
-  //   Xlog.useConsole = false;
-  //   Xlog.open(
-  //     level: XlogLevel.info,
-  //     cacheDir: cacheDir,
-  //     logDir: logDir,
-  //     nameprefix: nameprefix,
-  //   );
-  // }
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(Xlog.onRecord);
+  Logger.root.onRecord.listen(Mars.onRecord);
   runApp(MyApp());
 }
 
@@ -56,31 +32,34 @@ class _MyAppState extends State<MyApp> {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => ViewModelBinding(
-            viewBuilder: () => const HomeView(),
-            viewModelBuilder: () => HomeViewModel(),
-          ),
+          builder:
+              (context, state) => ViewModelBinding(
+                viewBuilder: () => const HomeView(),
+                viewModelBuilder: () => HomeViewModel(),
+              ),
           routes: [
             GoRoute(
               path: 'logs',
-              builder: (context, state) => ViewModelBinding(
-                viewBuilder: () => const LogsView(),
-                viewModelBuilder: () => LogsViewModel(),
-              ),
+              builder:
+                  (context, state) => ViewModelBinding(
+                    viewBuilder: () => const LogsView(),
+                    viewModelBuilder: () => LogsViewModel(),
+                  ),
               routes: [
                 GoRoute(
                   path: ':logName',
-                  builder: (context, state) => ViewModelBinding(
-                    viewBuilder: () => const LogView(),
-                    viewModelBuilder: () {
-                      final logName = state.pathParameters['logName'];
-                      if (logName == null) {
-                        throw ArgumentError.notNull();
-                      }
-                      return LogViewModel(logName);
-                    },
-                  ),
-                )
+                  builder:
+                      (context, state) => ViewModelBinding(
+                        viewBuilder: () => const LogView(),
+                        viewModelBuilder: () {
+                          final logName = state.pathParameters['logName'];
+                          if (logName == null) {
+                            throw ArgumentError.notNull();
+                          }
+                          return LogViewModel(logName);
+                        },
+                      ),
+                ),
               ],
             ),
           ],
@@ -91,8 +70,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: routerConfig,
-    );
+    return MaterialApp.router(routerConfig: routerConfig);
   }
 }

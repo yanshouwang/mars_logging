@@ -1,8 +1,8 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'dirs_channel.dart';
 import 'impl.dart';
-import 'xlog_channel.dart';
+import 'log.dart';
+import 'xlog.dart';
 
 abstract class MarsLoggingPlugin extends PlatformInterface {
   /// Constructs a MarsLoggingPlatform.
@@ -31,6 +31,6 @@ abstract class MarsLoggingPlugin extends PlatformInterface {
     _instance = instance;
   }
 
-  DirsChannel get dirsChannel;
-  XlogChannel get xlogChannel;
+  Xlog newXlog();
+  Log newLog();
 }
