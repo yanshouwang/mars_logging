@@ -7,26 +7,23 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
 class LogViewModel extends ViewModel {
-  final String _logName;
-  String? _logText;
+  final String _name;
+  String? _text;
 
-  LogViewModel(this._logName) : _logText = null {
+  LogViewModel(this._name) : _text = null {
     _updateLogContent();
   }
 
-  String get logName => _logName;
-  String? get logText => _logText;
+  String get name => _name;
+  String? get text => _text;
 
   void _updateLogContent() async {
-    final externalFilesDir = await path.getExternalStorageDirectory();
-    if (externalFilesDir == null) {
-      return;
-    }
-    final logPath = path.join(externalFilesDir.path, 'log', _logName);
-    final logFile = File(logPath);
-    final buffer = await logFile.readAsBytes();
-    final outBuffer = await Mars.decode(buffer);
-    _logText = utf8.decode(outBuffer);
+    final filesDir = await path.getApplicationSupportDirectory();
+    final logPath = path.join(filesDir.path, 'logs', _name);
+    final log = File(logPath);
+    final buffer = await log.readAsBytes();
+    final codeUnits = await Log.decode(buffer);
+    _text = utf8.decode(codeUnits);
     notifyListeners();
   }
 }

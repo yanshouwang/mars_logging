@@ -14,18 +14,15 @@ class LogsViewModel extends ViewModel {
   List<File> get logs => List.unmodifiable(_logs);
 
   void _updateLogs() async {
-    final externalFilesDir = await path.getExternalStorageDirectory();
-    if (externalFilesDir == null) {
-      return;
-    }
-    final logsPath = path.join(externalFilesDir.path, 'log');
-    final logDir = Directory(logsPath);
-    final exists = await logDir.exists();
+    final filesDir = await path.getApplicationSupportDirectory();
+    final logsPath = path.join(filesDir.path, 'logs');
+    final logsDir = Directory(logsPath);
+    final exists = await logsDir.exists();
     if (!exists) {
       return;
     }
-    final logEntities = await logDir.list().toList();
-    _logs = logEntities.whereType<File>().toList();
+    final entities = await logsDir.list().toList();
+    _logs = entities.whereType<File>().toList();
     notifyListeners();
   }
 }

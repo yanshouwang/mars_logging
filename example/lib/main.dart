@@ -9,7 +9,7 @@ import 'views.dart';
 
 void main() {
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(Mars.onRecord);
+  Logger.root.onRecord.listen(Log.onRecord);
   runApp(MyApp());
 }
 
@@ -71,5 +71,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(routerConfig: routerConfig);
+  }
+
+  @override
+  void dispose() {
+    routerConfig.dispose();
+    super.dispose();
   }
 }

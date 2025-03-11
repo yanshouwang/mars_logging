@@ -9,21 +9,18 @@ class LogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = ViewModel.of<LogViewModel>(context);
-    final logName = viewModel.logName;
-    final logText = viewModel.logText;
-    final title = path.basenameWithoutExtension(logName);
+    final name = viewModel.name;
+    final text = viewModel.text;
+    final title = path.basenameWithoutExtension(name);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: logText == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(logText),
-            ),
+      appBar: AppBar(title: Text(title)),
+      body:
+          text == null
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(text),
+              ),
     );
   }
 }

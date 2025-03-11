@@ -28,7 +28,7 @@ final class LogImpl extends Log {
   }
 
   @override
-  Future<void> setLogImp(LogImp imp) async {
+  Future<void> $setLogImp(LogImp imp) async {
     if (imp is! LogImpImpl) {
       throw TypeError();
     }
@@ -36,76 +36,70 @@ final class LogImpl extends Log {
   }
 
   @override
-  Future<void> appenderOpen({
-    LogLevel level = LogLevel.verbose,
-    AppenderMode mode = AppenderMode.async,
-    required String cacheDir,
-    required String logDir,
-    String nameprefix = '',
-    int cacheDays = 0,
-  }) async {
+  Future<void> $appenderOpen(LogLevel level, AppenderMode mode, String cacheDir,
+      String logDir, String nameprefix, int cacheDays) async {
     await api.Log.appenderOpen(
         level, mode, cacheDir, logDir, nameprefix, cacheDays);
   }
 
   @override
-  Future<void> appenderClose() async {
+  Future<void> $appenderClose() async {
     await api.Log.appenderClose();
   }
 
   @override
-  Future<void> appenderFlush() async {
+  Future<void> $appenderFlush() async {
     await api.Log.appenderFlush();
   }
 
   @override
-  Future<void> appenderFlushSync(bool isSync) async {
+  Future<void> $appenderFlushSync(bool isSync) async {
     await api.Log.appenderFlushSync(isSync);
   }
 
   @override
-  Future<LogLevel> getLogLevel() async {
+  Future<LogLevel> $getLogLevel() async {
     final value = await api.Log.getLogLevel();
     return value;
   }
 
   @override
-  Future<void> setLevel(LogLevel level, bool jni) async {
+  Future<void> $setLevel(LogLevel level, bool jni) async {
     await api.Log.setLevel(level, jni);
   }
 
   @override
-  Future<void> setConsoleLogOpen(bool isOpen) async {
+  Future<void> $setConsoleLogOpen(bool isOpen) async {
     await api.Log.setConsoleLogOpen(isOpen);
   }
 
   @override
-  Future<void> d(String tag, String msg) async {
+  Future<void> $d(String tag, String msg) async {
     await api.Log.d(tag, msg);
   }
 
   @override
-  Future<void> e(String tag, String msg) async {
+  Future<void> $e(String tag, String msg) async {
     await api.Log.e(tag, msg);
   }
 
   @override
-  Future<void> f(String tag, String msg) async {
+  Future<void> $f(String tag, String msg) async {
     await api.Log.f(tag, msg);
   }
 
   @override
-  Future<void> i(String tag, String msg) async {
+  Future<void> $i(String tag, String msg) async {
     await api.Log.i(tag, msg);
   }
 
   @override
-  Future<void> v(String tag, String msg) async {
+  Future<void> $v(String tag, String msg) async {
     await api.Log.v(tag, msg);
   }
 
   @override
-  Future<void> w(String tag, String msg) async {
+  Future<void> $w(String tag, String msg) async {
     await api.Log.w(tag, msg);
   }
 }

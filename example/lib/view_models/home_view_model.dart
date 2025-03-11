@@ -6,18 +6,18 @@ class HomeViewModel extends ViewModel with TypeLogger {
   final List<Level> levels;
 
   HomeViewModel()
-      : levels = List.unmodifiable([
-          Level.FINEST,
-          Level.FINER,
-          Level.FINE,
-          Level.CONFIG,
-          Level.INFO,
-          Level.WARNING,
-          Level.SEVERE,
-          Level.SHOUT,
-        ]);
+    : levels = List.unmodifiable([
+        Level.FINEST,
+        Level.FINER,
+        Level.FINE,
+        Level.CONFIG,
+        Level.INFO,
+        Level.WARNING,
+        Level.SEVERE,
+        Level.SHOUT,
+      ]);
 
   void log(Level level) {
-    logger.log(level, 'Hello World!');
+    logger.log(level, 'A message with $level.');
   }
 }
