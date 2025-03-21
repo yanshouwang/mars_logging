@@ -1,1 +1,3 @@
-export 'mars_logging.g.dart' show AppenderMode;
+import 'mars_logging.api.dart';
+
+typedef AppenderMode = AppenderModeApi;

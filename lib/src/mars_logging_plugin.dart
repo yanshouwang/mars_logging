@@ -1,8 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'impl.dart';
-import 'log.dart';
-import 'xlog.dart';
+import 'xlog_api.dart';
 
 abstract class MarsLoggingPlugin extends PlatformInterface {
   /// Constructs a MarsLoggingPlatform.
@@ -31,6 +30,5 @@ abstract class MarsLoggingPlugin extends PlatformInterface {
     _instance = instance;
   }
 
-  Xlog newXlog();
-  Log newLog();
+  XLogApi newXLogApi();
 }

@@ -46,18 +46,18 @@ class MarsLoggingError (
   val details: Any? = null
 ) : Throwable()
 
-enum class AppenderMode(val raw: Int) {
+enum class AppenderModeApi(val raw: Int) {
   ASYNC(0),
   SYNC(1);
 
   companion object {
-    fun ofRaw(raw: Int): AppenderMode? {
+    fun ofRaw(raw: Int): AppenderModeApi? {
       return values().firstOrNull { it.raw == raw }
     }
   }
 }
 
-enum class XLogLevel(val raw: Int) {
+enum class XLogLevelApi(val raw: Int) {
   ALL(0),
   VERBOSE(1),
   DEBUG(2),
@@ -68,7 +68,7 @@ enum class XLogLevel(val raw: Int) {
   NONE(7);
 
   companion object {
-    fun ofRaw(raw: Int): XLogLevel? {
+    fun ofRaw(raw: Int): XLogLevelApi? {
       return values().firstOrNull { it.raw == raw }
     }
   }
@@ -78,12 +78,12 @@ private open class MarsLoggingPigeonCodec : StandardMessageCodec() {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          AppenderMode.ofRaw(it.toInt())
+          AppenderModeApi.ofRaw(it.toInt())
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          XLogLevel.ofRaw(it.toInt())
+          XLogLevelApi.ofRaw(it.toInt())
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -91,11 +91,11 @@ private open class MarsLoggingPigeonCodec : StandardMessageCodec() {
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is AppenderMode -> {
+      is AppenderModeApi -> {
         stream.write(129)
         writeValue(stream, value.raw)
       }
-      is XLogLevel -> {
+      is XLogLevelApi -> {
         stream.write(130)
         writeValue(stream, value.raw)
       }
@@ -106,10 +106,9 @@ private open class MarsLoggingPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface XLogApi {
-  fun open(level: XLogLevel, mode: AppenderMode, logDir: String, cacheDir: String, cacheDays: Long, nameprefix: String)
+  fun open(mode: AppenderModeApi, logsDir: String, cacheDir: String, cacheDays: Long, nameprefix: String, useConsole: Boolean, level: XLogLevelApi)
   fun flush(isSync: Boolean)
   fun close()
-  fun setConsoleLog(isOpen: Boolean)
   fun verbose(tag: String, message: String)
   fun debug(tag: String, message: String)
   fun info(tag: String, message: String)
@@ -131,14 +130,15 @@ interface XLogApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val levelArg = args[0] as XLogLevel
-            val modeArg = args[1] as AppenderMode
-            val logDirArg = args[2] as String
-            val cacheDirArg = args[3] as String
-            val cacheDaysArg = args[4] as Long
-            val nameprefixArg = args[5] as String
+            val modeArg = args[0] as AppenderModeApi
+            val logsDirArg = args[1] as String
+            val cacheDirArg = args[2] as String
+            val cacheDaysArg = args[3] as Long
+            val nameprefixArg = args[4] as String
+            val useConsoleArg = args[5] as Boolean
+            val levelArg = args[6] as XLogLevelApi
             val wrapped: List<Any?> = try {
-              api.open(levelArg, modeArg, logDirArg, cacheDirArg, cacheDaysArg, nameprefixArg)
+              api.open(modeArg, logsDirArg, cacheDirArg, cacheDaysArg, nameprefixArg, useConsoleArg, levelArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)
@@ -173,24 +173,6 @@ interface XLogApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.close()
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.mars_logging.XLogApi.setConsoleLog$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val isOpenArg = args[0] as Boolean
-            val wrapped: List<Any?> = try {
-              api.setConsoleLog(isOpenArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

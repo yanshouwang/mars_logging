@@ -22,7 +22,7 @@ class LogViewModel extends ViewModel {
     final logPath = path.join(filesDir.path, 'logs', _name);
     final log = File(logPath);
     final buffer = await log.readAsBytes();
-    final codeUnits = await Log.decode(buffer);
+    final codeUnits = await XLog.decode(buffer);
     _text = utf8.decode(codeUnits);
     notifyListeners();
   }

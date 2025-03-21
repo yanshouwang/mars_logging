@@ -7,9 +7,9 @@ import 'package:mars_logging/mars_logging.dart';
 import 'view_models.dart';
 import 'views.dart';
 
-void main() {
+void main() async {
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(Log.onRecord);
+  Logger.root.onRecord.listen(XLog.onRecord);
   runApp(MyApp());
 }
 

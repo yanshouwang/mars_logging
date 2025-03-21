@@ -1,121 +1,74 @@
-import 'package:mars_logging/src/log_imp.dart';
-
 import 'appender_mode.dart';
-import 'mars_logging.g.dart' as api;
+import 'mars_logging.api.dart' as api;
 import 'mars_logging_plugin.dart';
-import 'log.dart';
-import 'log_level.dart';
-import 'xlog.dart';
+import 'xlog_api.dart';
+import 'xlog_level.dart';
 
 final class MarsLoggingPluginImpl extends MarsLoggingPlugin {
   @override
-  Log newLog() => LogImpl();
-  @override
-  Xlog newXlog() => XlogImpl();
+  XLogApi newXLogApi() => _XLogApi();
 }
 
-final class LogImpl extends Log {
-  static LogImpl? _instance;
+final class _XLogApi extends XLogApi {
+  final api.XLogApi _obj;
 
-  LogImpl.impl() : super.impl();
+  _XLogApi.impl(this._obj) : super.impl();
 
-  factory LogImpl() {
-    var instance = _instance;
-    if (instance == null) {
-      _instance = instance = LogImpl.impl();
-    }
-    return instance;
+  factory _XLogApi() {
+    final obj = api.XLogApi();
+    return _XLogApi.impl(obj);
   }
 
   @override
-  Future<void> $setLogImp(LogImp imp) async {
-    if (imp is! LogImpImpl) {
-      throw TypeError();
-    }
-    await api.Log.setLogImp(imp.args);
+  Future<void> open(
+      AppenderMode mode,
+      String logsDir,
+      String cacheDir,
+      int cacheDays,
+      String nameprefix,
+      bool useConsole,
+      XLogLevel level) async {
+    await _obj.open(
+        mode, logsDir, cacheDir, cacheDays, nameprefix, useConsole, level);
   }
 
   @override
-  Future<void> $appenderOpen(LogLevel level, AppenderMode mode, String cacheDir,
-      String logDir, String nameprefix, int cacheDays) async {
-    await api.Log.appenderOpen(
-        level, mode, cacheDir, logDir, nameprefix, cacheDays);
+  Future<void> flush(bool isSync) async {
+    await _obj.flush(isSync);
   }
 
   @override
-  Future<void> $appenderClose() async {
-    await api.Log.appenderClose();
+  Future<void> close() async {
+    await _obj.close();
   }
 
   @override
-  Future<void> $appenderFlush() async {
-    await api.Log.appenderFlush();
+  Future<void> verbose(String tag, String message) async {
+    await _obj.verbose(tag, message);
   }
 
   @override
-  Future<void> $appenderFlushSync(bool isSync) async {
-    await api.Log.appenderFlushSync(isSync);
+  Future<void> debug(String tag, String message) async {
+    await _obj.debug(tag, message);
   }
 
   @override
-  Future<LogLevel> $getLogLevel() async {
-    final value = await api.Log.getLogLevel();
-    return value;
+  Future<void> info(String tag, String message) async {
+    await _obj.info(tag, message);
   }
 
   @override
-  Future<void> $setLevel(LogLevel level, bool jni) async {
-    await api.Log.setLevel(level, jni);
+  Future<void> warning(String tag, String message) async {
+    await _obj.warning(tag, message);
   }
 
   @override
-  Future<void> $setConsoleLogOpen(bool isOpen) async {
-    await api.Log.setConsoleLogOpen(isOpen);
+  Future<void> error(String tag, String message) async {
+    await _obj.error(tag, message);
   }
 
   @override
-  Future<void> $d(String tag, String msg) async {
-    await api.Log.d(tag, msg);
-  }
-
-  @override
-  Future<void> $e(String tag, String msg) async {
-    await api.Log.e(tag, msg);
-  }
-
-  @override
-  Future<void> $f(String tag, String msg) async {
-    await api.Log.f(tag, msg);
-  }
-
-  @override
-  Future<void> $i(String tag, String msg) async {
-    await api.Log.i(tag, msg);
-  }
-
-  @override
-  Future<void> $v(String tag, String msg) async {
-    await api.Log.v(tag, msg);
-  }
-
-  @override
-  Future<void> $w(String tag, String msg) async {
-    await api.Log.w(tag, msg);
-  }
-}
-
-base mixin LogImpImpl on LogImp {
-  api.LogImp get args;
-}
-
-final class XlogImpl extends Xlog with LogImpImpl {
-  @override
-  final api.Xlog args;
-
-  XlogImpl.impl(this.args) : super.impl();
-
-  factory XlogImpl() {
-    final args = api.Xlog();
-    return XlogImpl.impl(args);
+  Future<void> fatal(String tag, String message) async {
+    await _obj.fatal(tag, message);
   }
 }

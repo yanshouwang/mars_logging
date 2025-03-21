@@ -23,8 +23,31 @@ A new Flutter plugin project.
   # s.resource_bundles = {'mars_logging_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
 
   s.dependency 'FlutterMacOS'
+  s.dependency 'OpenSSL-Universal', '~> 1.0'
+  s.frameworks = 'SystemConfiguration', 'CoreTelephony', 'Foundation'
+  s.libraries = 'resolv.9', 'z'
+  # s.libraries = 'resolv.9', 'z', 'ssl', 'crypto'
+  s.vendored_frameworks = 'Frameworks/*.framework'
+  # s.prepare_command = <<-EOF
+  #   # 创建 mars Module
+  #   rm -rf Frameworks/mars.framework/Modules
+  #   mkdir Frameworks/mars.framework/Modules
+  #   touch Frameworks/mars.framework/Modules/module.modulemap
+  #   cat <<-EOF > Frameworks/mars.framework/Modules/module.modulemap
+  #   framework module mars {
+  #     umbrella header "xlog/xlogger_interface.h"
+
+  #     export *
+  #     module * { export * }
+  #   }
+  # \EOF
+  # EOF
 
   s.platform = :osx, '10.11'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.pod_target_xcconfig = { 
+    'DEFINES_MODULE' => 'YES',
+    # 'SWIFT_OBJC_BRIDGING_HEADER' => '${PODS_TARGET_SRCROOT}/Classes/MarsLogging-Bridging-Header.h'
+    # 'SWIFT_OBJC_INTEROP_MODE' => 'objcxx'
+  }
   s.swift_version = '5.0'
 end
