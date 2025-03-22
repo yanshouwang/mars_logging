@@ -2,9 +2,18 @@ import Cocoa
 import FlutterMacOS
 
 public class MarsLoggingPlugin: NSObject, FlutterPlugin {
-    public static func register(with registrar: FlutterPluginRegistrar) {
-        let messenger = registrar.messenger
-        let api = XLogImpl()
-        XLogApiSetup.setUp(binaryMessenger: messenger, api: api)
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let channel = FlutterMethodChannel(name: "mars_logging", binaryMessenger: registrar.messenger)
+    let instance = MarsLoggingPlugin()
+    registrar.addMethodCallDelegate(instance, channel: channel)
+  }
+
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "getPlatformVersion":
+      result("macOS " + ProcessInfo.processInfo.operatingSystemVersionString)
+    default:
+      result(FlutterMethodNotImplemented)
     }
+  }
 }

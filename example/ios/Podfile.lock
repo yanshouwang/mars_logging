@@ -4,6 +4,9 @@ PODS:
     - Flutter
   - mars_logging (0.0.1):
     - Flutter
+    - FlutterMacOS
+    - OpenSSL-Universal (~> 1.0)
+  - OpenSSL-Universal (1.1.2301)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -11,8 +14,12 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - mars_logging (from `.symlinks/plugins/mars_logging/ios`)
+  - mars_logging (from `.symlinks/plugins/mars_logging/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - OpenSSL-Universal
 
 EXTERNAL SOURCES:
   Flutter:
@@ -20,14 +27,15 @@ EXTERNAL SOURCES:
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
   mars_logging:
-    :path: ".symlinks/plugins/mars_logging/ios"
+    :path: ".symlinks/plugins/mars_logging/darwin"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  mars_logging: 8fc80eca89a2309e7e0172b35f09e17aad3721f7
+  mars_logging: f401376eefc2323944928efd2618ebca9c687e20
+  OpenSSL-Universal: ca89c20240633a77c776082ba76b7d90f992bf77
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5

@@ -16,15 +16,12 @@ class AppDelegate: FlutterAppDelegate {
     override func applicationDidFinishLaunching(_ notification: Notification) {
         let mode = AppenderMode.async
         let filesDir = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).first!
-        var filesUrl = URL.init(fileURLWithPath: filesDir)
-#if os(macOS)
         // In a non-sandboxed app, these are shared directories where applications are
         // expected to use its bundle ID as a subdirectory. (For non-sandboxed apps,
         // adding the extra path is harmless).
         // This is not done for iOS, for compatibility with older versions of the
         // plugin.
-        filesUrl = filesUrl.appendingPathComponent(Bundle.main.bundleIdentifier!)
-#endif
+        let filesUrl = URL.init(fileURLWithPath: filesDir).appendingPathComponent(Bundle.main.bundleIdentifier!)
         let logsDir = filesUrl.appendingPathComponent("logs").path
         let cacheDir = filesUrl.appendingPathComponent("cache").path
         let cacheDays = Int32(0)

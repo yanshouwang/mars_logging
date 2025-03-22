@@ -1,6 +1,7 @@
 PODS:
   - FlutterMacOS (1.0.0)
   - mars_logging (0.0.1):
+    - Flutter
     - FlutterMacOS
     - OpenSSL-Universal (~> 1.0)
   - OpenSSL-Universal (1.1.2301)
@@ -10,7 +11,7 @@ PODS:
 
 DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - mars_logging (from `Flutter/ephemeral/.symlinks/plugins/mars_logging/macos`)
+  - mars_logging (from `Flutter/ephemeral/.symlinks/plugins/mars_logging/darwin`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
@@ -21,13 +22,13 @@ EXTERNAL SOURCES:
   FlutterMacOS:
     :path: Flutter/ephemeral
   mars_logging:
-    :path: Flutter/ephemeral/.symlinks/plugins/mars_logging/macos
+    :path: Flutter/ephemeral/.symlinks/plugins/mars_logging/darwin
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  mars_logging: 9fca1033f9814e466449d99e9c6708ac38b54239
+  mars_logging: f401376eefc2323944928efd2618ebca9c687e20
   OpenSSL-Universal: ca89c20240633a77c776082ba76b7d90f992bf77
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
 

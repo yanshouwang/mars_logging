@@ -1,0 +1,6 @@
+framework module mars {
+  umbrella header "xlog/xloggerbase.h"
+
+  export *
+  module * { export * }
+}

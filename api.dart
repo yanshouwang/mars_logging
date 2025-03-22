@@ -11,8 +11,7 @@ import 'package:pigeon/pigeon.dart';
       package: 'dev.hebei.mars_logging',
       errorClassName: 'MarsLoggingError',
     ),
-    // swiftOut: 'ios/Classes/MarsLogging.g.swift',
-    swiftOut: 'macos/Classes/MarsLogging.api.swift',
+    swiftOut: 'darwin/Classes/MarsLogging.api.swift',
     swiftOptions: SwiftOptions(
       errorClassName: 'MarsLoggingError',
     ),
