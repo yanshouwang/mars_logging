@@ -1,3 +1,3 @@
-export 'src/decode_mars_nocrypt_log_file.dart';
-export 'src/mars_logging.api.dart' show AppenderMode, XLogLevel;
 export 'src/xlog.dart';
+export 'src/appender_mode.dart';
+export 'src/xlog_level.dart';
