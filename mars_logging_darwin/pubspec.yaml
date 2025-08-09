@@ -1,0 +1,39 @@
+name: mars_logging_darwin
+description: 'iOS and macOS implementation of the mars_logging plugin.'
+version: 1.0.0-dev.0
+repository: 'https://github.com/yanshouwang/mars_logging'
+issue_tracker: 'https://github.com/yanshouwang/mars_logging/issues'
+topics:
+  - mars
+  - logging
+
+environment:
+  sdk: ^3.7.2
+  # Flutter versions prior to 3.7 did not support the
+  # sharedDarwinSource option.
+  flutter: '>=3.7.0'
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mars_logging_platform_interface: ^1.0.0-dev.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  pigeon: ^26.0.0
+
+flutter:
+  plugin:
+    implements: mars_logging
+    platforms:
+      ios:
+        sharedDarwinSource: true
+        pluginClass: MarsLoggingDarwinPlugin
+        dartPluginClass: MarsLoggingDarwinPlugin
+      macos:
+        sharedDarwinSource: true
+        pluginClass: MarsLoggingDarwinPlugin
+        dartPluginClass: MarsLoggingDarwinPlugin
