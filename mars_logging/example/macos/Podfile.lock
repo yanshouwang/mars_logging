@@ -1,0 +1,37 @@
+PODS:
+  - FlutterMacOS (1.0.0)
+  - mars_logging_darwin (0.0.1):
+    - Flutter
+    - FlutterMacOS
+    - OpenSSL-Universal (~> 1.0)
+  - OpenSSL-Universal (1.1.2301)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - mars_logging_darwin (from `Flutter/ephemeral/.symlinks/plugins/mars_logging_darwin/darwin`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - OpenSSL-Universal
+
+EXTERNAL SOURCES:
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  mars_logging_darwin:
+    :path: Flutter/ephemeral/.symlinks/plugins/mars_logging_darwin/darwin
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+
+SPEC CHECKSUMS:
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  mars_logging_darwin: 1ea2e32eb51bd3f37f3f20396c2e3b4eed41c559
+  OpenSSL-Universal: ca89c20240633a77c776082ba76b7d90f992bf77
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+
+PODFILE CHECKSUM: 7eb978b976557c8c1cd717d8185ec483fd090a82
+
+COCOAPODS: 1.16.2
