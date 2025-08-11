@@ -1,5 +1,5 @@
 import 'package:clover/clover.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mars_logging_example/view_models.dart';
 import 'package:path/path.dart' as path;
@@ -11,23 +11,19 @@ class LogsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = ViewModel.of<LogsViewModel>(context);
     final logs = viewModel.logs;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Logs')),
-      body: ListView.separated(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(middle: const Text('Logs')),
+      child: ListView.builder(
         itemBuilder: (context, index) {
           final log = logs[index];
           final logPath = log.path;
-          final logName = path.basename(logPath);
           final title = path.basenameWithoutExtension(logPath);
-          return ListTile(
+          return CupertinoListTile(
             title: Text(title),
             onTap: () {
-              context.go('/logs/$logName');
+              context.go('/logs/${Uri.encodeComponent(logPath)}');
             },
           );
-        },
-        separatorBuilder: (context, index) {
-          return const Divider();
         },
         itemCount: logs.length,
       ),

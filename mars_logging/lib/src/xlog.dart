@@ -84,7 +84,7 @@ abstract base class XLog {
     return Isolate.run(() {
       final startPos = getLogStartPos(buffer, 2);
       if (startPos == -1) {
-        throw ArgumentError.value(startPos);
+        throw ArgumentError.notNull('startPos');
       }
       final outBuffer = <int>[];
       var currentPos = startPos;

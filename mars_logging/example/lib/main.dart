@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:clover/clover.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:mars_logging/mars_logging.dart';
@@ -78,16 +78,17 @@ class _MyAppState extends State<MyApp> {
                   ),
               routes: [
                 GoRoute(
-                  path: ':logName',
+                  path: ':logPath',
                   builder:
                       (context, state) => ViewModelBinding(
                         viewBuilder: () => const LogView(),
                         viewModelBuilder: () {
-                          final logName = state.pathParameters['logName'];
-                          if (logName == null) {
+                          final encodedPath = state.pathParameters['logPath'];
+                          if (encodedPath == null) {
                             throw ArgumentError.notNull();
                           }
-                          return LogViewModel(logName);
+                          final logPath = Uri.decodeComponent(encodedPath);
+                          return LogViewModel(logPath);
                         },
                       ),
                 ),
@@ -101,7 +102,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: routerConfig);
+    return CupertinoApp.router(routerConfig: routerConfig);
   }
 
   @override
