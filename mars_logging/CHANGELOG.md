@@ -1,6 +1,9 @@
-## 0.0.1-dev.0
+## 1.0.0-dev.0
 
-* TODO: Describe initial release.
+* Use fvm 3.29.3
+* Use federated plugin
+* Add XLog
+* Add XLogView
 
 ## 0.0.1-dev.3
 
