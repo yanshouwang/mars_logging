@@ -12,7 +12,18 @@ class LogsView extends StatelessWidget {
     final viewModel = ViewModel.of<LogsViewModel>(context);
     final logs = viewModel.logs;
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(middle: const Text('Logs')),
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('Logs'),
+        trailing: CupertinoButton(
+          onPressed: () async {
+            final log = await viewModel.openLog();
+            if (log == null || !context.mounted) return;
+            final logPath = log.path;
+            context.go('/logs/${Uri.encodeComponent(logPath)}');
+          },
+          child: Icon(CupertinoIcons.tray),
+        ),
+      ),
       child: ListView.builder(
         itemBuilder: (context, index) {
           final log = logs[index];

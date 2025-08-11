@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:clover/clover.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
@@ -24,5 +25,11 @@ class LogsViewModel extends ViewModel {
     final entities = await logsDir.list().toList();
     _logs = entities.whereType<File>().toList();
     notifyListeners();
+  }
+
+  Future<XFile?> openLog() async {
+    final typeGroup = XTypeGroup(label: 'XLOG', extensions: ['xlog']);
+    final file = await openFile(acceptedTypeGroups: [typeGroup]);
+    return file;
   }
 }
