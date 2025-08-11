@@ -1,6 +1,6 @@
 # mars_logging_darwin
 
-A new Flutter plugin project.
+iOS and macOS implementation of the mars_logging plugin.
 
 ## Getting Started
 

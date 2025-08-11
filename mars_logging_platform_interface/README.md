@@ -1,6 +1,6 @@
 # mars_logging_platform_interface
 
-A new Flutter plugin project.
+A common platform interface for the mars_logging plugin.
 
 ## Getting Started
 

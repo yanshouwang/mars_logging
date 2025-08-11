@@ -1,6 +1,6 @@
 # mars_logging_android
 
-A new Flutter plugin project.
+Android implementation of the mars_logging plugin.
 
 ## Getting Started
 
