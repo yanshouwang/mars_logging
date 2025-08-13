@@ -11,20 +11,30 @@ abstract base class XLog {
 
   static Future<void> open({
     AppenderMode mode = AppenderMode.async,
+    XLogLevel level = kDebugMode ? XLogLevel.debug : XLogLevel.info,
     required String logsDir,
     required String cacheDir,
     int cacheDays = 0,
-    String nameprefix = '',
+    String namePrefix = '',
+    CompressMode compressMode = CompressMode.zlib,
+    CompressLevel compressLevel = CompressLevel.level6,
+    String pubKey = '',
     bool useConsole = kDebugMode,
-    XLogLevel level = XLogLevel.all,
+    int maxFileSize = 0,
+    int maxAliveDuration = 10 * 24 * 60 * 60,
   }) => _api.open(
     mode,
+    level,
     logsDir,
     cacheDir,
     cacheDays,
-    nameprefix,
+    namePrefix,
+    compressMode,
+    compressLevel,
+    pubKey,
     useConsole,
-    level,
+    maxFileSize,
+    maxAliveDuration,
   );
 
   static Future<void> flush(bool isSync) => _api.flush(isSync);

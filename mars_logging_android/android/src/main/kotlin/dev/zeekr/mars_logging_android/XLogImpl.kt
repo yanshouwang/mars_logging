@@ -3,14 +3,32 @@ package dev.zeekr.mars_logging_android
 class XLogImpl : XLogHostApi {
     override fun open(
         mode: AppenderModeApi,
+        level: XLogLevelApi,
         logsDir: String,
         cacheDir: String,
         cacheDays: Long,
-        nameprefix: String,
+        namePrefix: String,
+        compressMode: CompressModeApi,
+        compressLevel: CompressLevelApi,
+        pubKey: String,
         useConsole: Boolean,
-        level: XLogLevelApi
+        maxFileSize: Long,
+        maxAliveDuration: Long
     ) {
-        XLog.open(mode.impl, logsDir, cacheDir, cacheDays.toInt(), nameprefix, useConsole, level.impl)
+        XLog.open(
+            mode.impl,
+            level.impl,
+            logsDir,
+            cacheDir,
+            cacheDays.toInt(),
+            namePrefix,
+            compressMode.impl,
+            compressLevel.impl,
+            pubKey,
+            useConsole,
+            maxFileSize,
+            maxAliveDuration,
+        )
     }
 
     override fun flush(isSync: Boolean) {
@@ -62,4 +80,23 @@ val XLogLevelApi.impl: XLogLevel
         XLogLevelApi.ERROR -> XLogLevel.ERROR
         XLogLevelApi.FATAL -> XLogLevel.FATAL
         XLogLevelApi.NONE -> XLogLevel.NONE
+    }
+
+val CompressModeApi.impl: CompressMode
+    get() = when (this) {
+        CompressModeApi.ZLIB -> CompressMode.ZLIB
+        CompressModeApi.ZSTD -> CompressMode.ZSTD
+    }
+
+val CompressLevelApi.impl: CompressLevel
+    get() = when (this) {
+        CompressLevelApi.LEVEL1 -> CompressLevel.LEVEL1
+        CompressLevelApi.LEVEL2 -> CompressLevel.LEVEL2
+        CompressLevelApi.LEVEL3 -> CompressLevel.LEVEL3
+        CompressLevelApi.LEVEL4 -> CompressLevel.LEVEL4
+        CompressLevelApi.LEVEL5 -> CompressLevel.LEVEL5
+        CompressLevelApi.LEVEL6 -> CompressLevel.LEVEL6
+        CompressLevelApi.LEVEL7 -> CompressLevel.LEVEL7
+        CompressLevelApi.LEVEL8 -> CompressLevel.LEVEL8
+        CompressLevelApi.LEVEL9 -> CompressLevel.LEVEL9
     }

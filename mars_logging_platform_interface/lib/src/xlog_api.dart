@@ -4,6 +4,20 @@ enum AppenderMode { async, sync }
 
 enum XLogLevel { all, verbose, debug, info, warning, error, fatal, none }
 
+enum CompressMode { zlib, zstd }
+
+enum CompressLevel {
+  level1,
+  level2,
+  level3,
+  level4,
+  level5,
+  level6,
+  level7,
+  level8,
+  level9,
+}
+
 abstract base class XLogApi extends PlatformInterface {
   static final Object _token = Object();
 
@@ -31,12 +45,17 @@ abstract base class XLogApi extends PlatformInterface {
 
   Future<void> open(
     AppenderMode mode,
+    XLogLevel level,
     String logsDir,
     String cacheDir,
     int cacheDays,
-    String nameprefix,
+    String namePrefix,
+    CompressMode compressMode,
+    CompressLevel compressLevel,
+    String pubKey,
     bool useConsole,
-    XLogLevel level,
+    int maxFileSize,
+    int maxAliveDuration,
   );
   Future<void> flush(bool isSync);
   Future<void> close();

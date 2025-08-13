@@ -25,7 +25,7 @@ class AppDelegate: FlutterAppDelegate {
 //        let logsDir = filesUrl.appendingPathComponent("logs").path
 //        let cacheDir = filesUrl.appendingPathComponent("cache").path
 //        let cacheDays = Int32(0)
-//        let nameprefix = "log"
+//        let namePrefix = "log"
 //#if DEBUG
 //        let useConsole = true
 //        let level = XLogLevel.debug
@@ -33,7 +33,7 @@ class AppDelegate: FlutterAppDelegate {
 //        let useConsole = false
 //        let level = XLogLevel.info
 //#endif
-//        XLog.open(mode, logsDir: logsDir, cacheDir: cacheDir, cacheDays: cacheDays, nameprefix: nameprefix, useConsole: useConsole, level: level)
+//        XLog.open(mode, logsDir: logsDir, cacheDir: cacheDir, cacheDays: cacheDays, namePrefix: namePrefix, useConsole: useConsole, level: level)
 //    }
 //    
 //    override func applicationWillTerminate(_ notification: Notification) {

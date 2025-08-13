@@ -8,8 +8,8 @@
 import Foundation
 
 class XLogImpl: XLogHostApi {
-    func open(mode: AppenderModeApi, logsDir: String, cacheDir: String, cacheDays: Int64, nameprefix: String, useConsole: Bool, level: XLogLevelApi) throws {
-        XLog.open(mode.impl, logsDir: logsDir, cacheDir: cacheDir, cacheDays: Int32(cacheDays), nameprefix: nameprefix, useConsole: useConsole, level: level.impl)
+    func open(mode: AppenderModeApi, level: XLogLevelApi, logsDir: String, cacheDir: String, cacheDays: Int64, namePrefix: String, compressMode: CompressModeApi, compressLevel: CompressLevelApi, pubKey: String, useConsole: Bool, maxFileSize: Int64, maxAliveDuration: Int64) throws {
+        XLog.open(mode.impl, level: level.impl, logsDir: logsDir, cacheDir: cacheDir, cacheDays: Int32(cacheDays), namePrefix: namePrefix, compressMode: compressMode.impl, compressLevel: compressLevel.impl, pubKey: pubKey, useConsole: useConsole, maxFileSize: UInt64(maxFileSize), maxAliveDuration: Int(maxAliveDuration))
     }
     
     func flush(isSync: Bool) throws {
@@ -75,6 +75,43 @@ extension XLogLevelApi {
             return .fatal
         case .none:
             return .none
+        }
+    }
+}
+
+extension CompressModeApi {
+    var impl: CompressMode {
+        switch self {
+        case .zlib:
+            return .zlib
+        case .zstd:
+            return .zstd
+        }
+    }
+    
+}
+
+extension CompressLevelApi {
+    var impl: CompressLevel {
+        switch self {
+        case .level1:
+            return .level1
+        case .level2:
+            return .level2
+        case .level3:
+            return .level3
+        case .level4:
+            return .level4
+        case .level5:
+            return .level5
+        case .level6:
+            return .level6
+        case .level7:
+            return .level7
+        case .level8:
+            return .level8
+        case .level9:
+            return .level9
         }
     }
 }

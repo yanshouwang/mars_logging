@@ -75,6 +75,35 @@ enum class XLogLevelApi(val raw: Int) {
     }
   }
 }
+
+enum class CompressModeApi(val raw: Int) {
+  ZLIB(0),
+  ZSTD(1);
+
+  companion object {
+    fun ofRaw(raw: Int): CompressModeApi? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class CompressLevelApi(val raw: Int) {
+  LEVEL1(0),
+  LEVEL2(1),
+  LEVEL3(2),
+  LEVEL4(3),
+  LEVEL5(4),
+  LEVEL6(5),
+  LEVEL7(6),
+  LEVEL8(7),
+  LEVEL9(8);
+
+  companion object {
+    fun ofRaw(raw: Int): CompressLevelApi? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
 private open class MarsLoggingApiPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -86,6 +115,16 @@ private open class MarsLoggingApiPigeonCodec : StandardMessageCodec() {
       130.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
           XLogLevelApi.ofRaw(it.toInt())
+        }
+      }
+      131.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          CompressModeApi.ofRaw(it.toInt())
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          CompressLevelApi.ofRaw(it.toInt())
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -101,6 +140,14 @@ private open class MarsLoggingApiPigeonCodec : StandardMessageCodec() {
         stream.write(130)
         writeValue(stream, value.raw)
       }
+      is CompressModeApi -> {
+        stream.write(131)
+        writeValue(stream, value.raw)
+      }
+      is CompressLevelApi -> {
+        stream.write(132)
+        writeValue(stream, value.raw)
+      }
       else -> super.writeValue(stream, value)
     }
   }
@@ -108,7 +155,7 @@ private open class MarsLoggingApiPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface XLogHostApi {
-  fun open(mode: AppenderModeApi, logsDir: String, cacheDir: String, cacheDays: Long, nameprefix: String, useConsole: Boolean, level: XLogLevelApi)
+  fun open(mode: AppenderModeApi, level: XLogLevelApi, logsDir: String, cacheDir: String, cacheDays: Long, namePrefix: String, compressMode: CompressModeApi, compressLevel: CompressLevelApi, pubKey: String, useConsole: Boolean, maxFileSize: Long, maxAliveDuration: Long)
   fun flush(isSync: Boolean)
   fun close()
   fun verbose(tag: String, message: String)
@@ -133,14 +180,19 @@ interface XLogHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val modeArg = args[0] as AppenderModeApi
-            val logsDirArg = args[1] as String
-            val cacheDirArg = args[2] as String
-            val cacheDaysArg = args[3] as Long
-            val nameprefixArg = args[4] as String
-            val useConsoleArg = args[5] as Boolean
-            val levelArg = args[6] as XLogLevelApi
+            val levelArg = args[1] as XLogLevelApi
+            val logsDirArg = args[2] as String
+            val cacheDirArg = args[3] as String
+            val cacheDaysArg = args[4] as Long
+            val namePrefixArg = args[5] as String
+            val compressModeArg = args[6] as CompressModeApi
+            val compressLevelArg = args[7] as CompressLevelApi
+            val pubKeyArg = args[8] as String
+            val useConsoleArg = args[9] as Boolean
+            val maxFileSizeArg = args[10] as Long
+            val maxAliveDurationArg = args[11] as Long
             val wrapped: List<Any?> = try {
-              api.open(modeArg, logsDirArg, cacheDirArg, cacheDaysArg, nameprefixArg, useConsoleArg, levelArg)
+              api.open(modeArg, levelArg, logsDirArg, cacheDirArg, cacheDaysArg, namePrefixArg, compressModeArg, compressLevelArg, pubKeyArg, useConsoleArg, maxFileSizeArg, maxAliveDurationArg)
               listOf(null)
             } catch (exception: Throwable) {
               MarsLoggingApiPigeonUtils.wrapError(exception)

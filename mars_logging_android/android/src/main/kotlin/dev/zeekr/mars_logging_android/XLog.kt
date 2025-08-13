@@ -6,21 +6,37 @@ import com.tencent.mars.xlog.Xlog
 object XLog {
     fun open(
         mode: AppenderMode,
+        level: XLogLevel,
         logsDir: String,
         cacheDir: String,
         cacheDays: Int,
-        nameprefix: String,
+        namePrefix: String,
+        compressMode: CompressMode,
+        compressLevel: CompressLevel,
+        pubKey: String,
         useConsole: Boolean,
-        level: XLogLevel
+        maxFileSize: Long,
+        maxAliveDuration: Long,
     ) {
         System.loadLibrary("c++_shared")
         System.loadLibrary("marsxlog")
 
         val imp = Xlog()
+        imp.setConsoleLogOpen(0, useConsole)
+        imp.setMaxFileSize(0, maxFileSize)
+        imp.setMaxAliveTime(0, maxAliveDuration)
+        val config = Xlog.XLogConfig()
+        config.mode = mode.value
+        config.level = level.value
+        config.logdir = logsDir
+        config.cachedir = cacheDir
+        config.cachedays = cacheDays
+        config.nameprefix = namePrefix
+        config.compressmode = compressMode.value
+        config.compresslevel = compressLevel.value
+        config.pubkey = pubKey
+        appenderOpen(config)
         Log.setLogImp(imp)
-
-        Log.appenderOpen(level.value, mode.value, cacheDir, logsDir, nameprefix, cacheDays)
-        Log.setConsoleLogOpen(useConsole)
     }
 
     fun flush(isSync: Boolean) {
@@ -54,4 +70,6 @@ object XLog {
     fun fatal(tag: String, message: String) {
         Log.f(tag, message)
     }
+
+    private external fun appenderOpen(config: Xlog.XLogConfig)
 }

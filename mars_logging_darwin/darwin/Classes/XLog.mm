@@ -6,19 +6,24 @@
 
 @implementation XLog
 
-+ (void)open:(AppenderMode)mode logsDir:(NSString *)logsDir cacheDir:(NSString *)cacheDir cacheDays:(int)cacheDays nameprefix:(const char *)nameprefix useConsole:(bool)useConsole level:(XLogLevel)level {
++ (void)open: (AppenderMode)mode level: (XLogLevel)level logsDir: (NSString *)logsDir cacheDir: (NSString *)cacheDir cacheDays: (int)cacheDays namePrefix: (NSString*)namePrefix compressMode: (CompressMode)compressMode compressLevel: (CompressLevel)compressLevel pubKey: (NSString*)pubKey useConsole: (bool)useConsole maxFileSize: (uint64_t)maxFileSize maxAliveDuration: (long)maxAliveDuration {
+    xlogger_SetLevel((TLogLevel)level);
+    mars::xlog::appender_set_console_log(useConsole);
+    mars::xlog::appender_set_max_file_size(maxFileSize);
+    mars::xlog::appender_set_max_alive_duration(maxAliveDuration);
     mars::xlog::XLogConfig config;
     config.mode_ = (mars::xlog::TAppenderMode)mode;
     config.logdir_ = [logsDir UTF8String];
     config.cachedir_ = [cacheDir UTF8String];
     config.cache_days_ = cacheDays;
-    config.nameprefix_ = nameprefix;
+    config.nameprefix_ = [namePrefix UTF8String];
+    config.compress_mode_ = (mars::xlog::TCompressMode)compressMode;
+    config.compress_level_ = (int)compressLevel;
+    config.pub_key_ = [pubKey UTF8String];
     mars::xlog::appender_open(config);
-    mars::xlog::appender_set_console_log(useConsole);
-    xlogger_SetLevel((TLogLevel)level);
 }
 
-+ (void)flush:(bool)isSync {
++ (void)flush: (bool)isSync {
     if (isSync) {
         mars::xlog::appender_flush_sync();
     } else {

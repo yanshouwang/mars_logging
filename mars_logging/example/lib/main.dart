@@ -19,21 +19,25 @@ void main() {
 void onStartUp() async {
   WidgetsFlutterBinding.ensureInitialized();
   final mode = AppenderMode.async;
+  final level = kDebugMode ? XLogLevel.debug : XLogLevel.info;
   final filesDir = await path.getApplicationSupportDirectory();
   final logsDir = path.join(filesDir.path, 'logs');
   final cacheDir = path.join(filesDir.path, 'cache');
   final cacheDays = 0;
-  final nameprefix = 'log';
+  final namePrefix = 'log';
   final useConsole = kDebugMode;
-  final level = kDebugMode ? XLogLevel.debug : XLogLevel.info;
+  final maxFileSize = 10 * 1024 * 1024;
+  final maxAliveDuration = 30 * 24 * 60 * 60;
   await XLog.open(
     mode: mode,
+    level: level,
     logsDir: logsDir,
     cacheDir: cacheDir,
     cacheDays: cacheDays,
-    nameprefix: nameprefix,
+    namePrefix: namePrefix,
     useConsole: useConsole,
-    level: level,
+    maxFileSize: maxFileSize,
+    maxAliveDuration: maxAliveDuration,
   );
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen(XLog.onRecord);

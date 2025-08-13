@@ -81,6 +81,23 @@ enum XLogLevelApi: Int {
   case none = 7
 }
 
+enum CompressModeApi: Int {
+  case zlib = 0
+  case zstd = 1
+}
+
+enum CompressLevelApi: Int {
+  case level1 = 0
+  case level2 = 1
+  case level3 = 2
+  case level4 = 3
+  case level5 = 4
+  case level6 = 5
+  case level7 = 6
+  case level8 = 7
+  case level9 = 8
+}
+
 private class MarsLoggingApiPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -96,6 +113,18 @@ private class MarsLoggingApiPigeonCodecReader: FlutterStandardReader {
         return XLogLevelApi(rawValue: enumResultAsInt)
       }
       return nil
+    case 131:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return CompressModeApi(rawValue: enumResultAsInt)
+      }
+      return nil
+    case 132:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return CompressLevelApi(rawValue: enumResultAsInt)
+      }
+      return nil
     default:
       return super.readValue(ofType: type)
     }
@@ -109,6 +138,12 @@ private class MarsLoggingApiPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.rawValue)
     } else if let value = value as? XLogLevelApi {
       super.writeByte(130)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? CompressModeApi {
+      super.writeByte(131)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? CompressLevelApi {
+      super.writeByte(132)
       super.writeValue(value.rawValue)
     } else {
       super.writeValue(value)
@@ -132,7 +167,7 @@ class MarsLoggingApiPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendabl
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol XLogHostApi {
-  func open(mode: AppenderModeApi, logsDir: String, cacheDir: String, cacheDays: Int64, nameprefix: String, useConsole: Bool, level: XLogLevelApi) throws
+  func open(mode: AppenderModeApi, level: XLogLevelApi, logsDir: String, cacheDir: String, cacheDays: Int64, namePrefix: String, compressMode: CompressModeApi, compressLevel: CompressLevelApi, pubKey: String, useConsole: Bool, maxFileSize: Int64, maxAliveDuration: Int64) throws
   func flush(isSync: Bool) throws
   func close() throws
   func verbose(tag: String, message: String) throws
@@ -154,14 +189,19 @@ class XLogHostApiSetup {
       openChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let modeArg = args[0] as! AppenderModeApi
-        let logsDirArg = args[1] as! String
-        let cacheDirArg = args[2] as! String
-        let cacheDaysArg = args[3] as! Int64
-        let nameprefixArg = args[4] as! String
-        let useConsoleArg = args[5] as! Bool
-        let levelArg = args[6] as! XLogLevelApi
+        let levelArg = args[1] as! XLogLevelApi
+        let logsDirArg = args[2] as! String
+        let cacheDirArg = args[3] as! String
+        let cacheDaysArg = args[4] as! Int64
+        let namePrefixArg = args[5] as! String
+        let compressModeArg = args[6] as! CompressModeApi
+        let compressLevelArg = args[7] as! CompressLevelApi
+        let pubKeyArg = args[8] as! String
+        let useConsoleArg = args[9] as! Bool
+        let maxFileSizeArg = args[10] as! Int64
+        let maxAliveDurationArg = args[11] as! Int64
         do {
-          try api.open(mode: modeArg, logsDir: logsDirArg, cacheDir: cacheDirArg, cacheDays: cacheDaysArg, nameprefix: nameprefixArg, useConsole: useConsoleArg, level: levelArg)
+          try api.open(mode: modeArg, level: levelArg, logsDir: logsDirArg, cacheDir: cacheDirArg, cacheDays: cacheDaysArg, namePrefix: namePrefixArg, compressMode: compressModeArg, compressLevel: compressLevelArg, pubKey: pubKeyArg, useConsole: useConsoleArg, maxFileSize: maxFileSizeArg, maxAliveDuration: maxAliveDurationArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))

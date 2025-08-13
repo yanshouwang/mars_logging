@@ -19,6 +19,12 @@ dependencies:
   mars_logging_android: ^1.0.0-dev.0
   mars_logging_darwin: ^1.0.0-dev.0
   logging: ^1.3.0
+  convert: ^3.1.2
+  pointycastle: ^4.0.0
+  archive: ^4.0.7
+  es_compression: ^2.0.14
+  zstandard: ^1.3.27
+  path: ^1.9.1
   cross_file: ^0.3.4+2
 
 dev_dependencies:
