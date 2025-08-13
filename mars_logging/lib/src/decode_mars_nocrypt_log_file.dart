@@ -1,63 +1,74 @@
-// ignore_for_file: constant_identifier_names
-
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:async';
 
-const MAGIC_NO_COMPRESS_START = 0x03;
-const MAGIC_NO_COMPRESS_START1 = 0x06;
-const MAGIC_NO_COMPRESS_NO_CRYPT_START = 0x08;
-const MAGIC_COMPRESS_START = 0x04;
-const MAGIC_COMPRESS_START1 = 0x05;
-const MAGIC_COMPRESS_START2 = 0x07;
-const MAGIC_COMPRESS_NO_CRYPT_START = 0x09;
-const MAGIC_END = 0x00;
+import 'package:es_compression/zstd.dart';
+
+const int MAGIC_NO_COMPRESS_START = 0x03;
+const int MAGIC_NO_COMPRESS_START1 = 0x06;
+const int MAGIC_NO_COMPRESS_NO_CRYPT_START = 0x08;
+const int MAGIC_COMPRESS_START = 0x04;
+const int MAGIC_COMPRESS_START1 = 0x05;
+const int MAGIC_COMPRESS_START2 = 0x07;
+const int MAGIC_COMPRESS_NO_CRYPT_START = 0x09;
+
+const int MAGIC_SYNC_ZSTD_START = 0x0A;
+const int MAGIC_SYNC_NO_CRYPT_ZSTD_START = 0x0B;
+const int MAGIC_ASYNC_ZSTD_START = 0x0C;
+const int MAGIC_ASYNC_NO_CRYPT_ZSTD_START = 0x0D;
+
+const int MAGIC_END = 0x00;
 
 int lastSeq = 0;
 
+/// 检查缓冲区中从指定偏移量开始的日志记录是否有效
 (bool, String) isGoodLogBuffer(Uint8List buffer, int offset, int count) {
   if (offset == buffer.length) {
     return (true, '');
   }
 
-  final magicStart = buffer[offset];
+  int magicStart = buffer[offset];
   int cryptKeyLen;
-  switch (magicStart) {
-    case MAGIC_NO_COMPRESS_START:
-    case MAGIC_COMPRESS_START:
-    case MAGIC_COMPRESS_START1:
-      cryptKeyLen = 4;
-      break;
-    case MAGIC_COMPRESS_START2:
-    case MAGIC_NO_COMPRESS_START1:
-    case MAGIC_NO_COMPRESS_NO_CRYPT_START:
-    case MAGIC_COMPRESS_NO_CRYPT_START:
-      cryptKeyLen = 64;
-      break;
-    default:
-      return (false, 'buffer[$offset]:${buffer[offset]} != MAGIC_NUM_START');
+
+  if ([
+    MAGIC_NO_COMPRESS_START,
+    MAGIC_COMPRESS_START,
+    MAGIC_COMPRESS_START1,
+  ].contains(magicStart)) {
+    cryptKeyLen = 4;
+  } else if ([
+    MAGIC_COMPRESS_START2,
+    MAGIC_NO_COMPRESS_START1,
+    MAGIC_NO_COMPRESS_NO_CRYPT_START,
+    MAGIC_COMPRESS_NO_CRYPT_START,
+    MAGIC_SYNC_ZSTD_START,
+    MAGIC_SYNC_NO_CRYPT_ZSTD_START,
+    MAGIC_ASYNC_ZSTD_START,
+    MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
+  ].contains(magicStart)) {
+    cryptKeyLen = 64;
+  } else {
+    return (false, 'buffer[$offset]:$magicStart != MAGIC_NUM_START');
   }
 
-  final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
-
-  if (offset + headerLen + 1 + 1 > buffer.length) {
+  int headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
+  if (offset + headerLen + 1 > buffer.length) {
     return (false, 'offset:$offset > buffer.length:${buffer.length}');
   }
 
-  final length = ByteData.view(
-    buffer.buffer,
+  ByteData byteData = ByteData.view(buffer.buffer);
+  int length = byteData.getUint32(
     offset + headerLen - 4 - cryptKeyLen,
-  ).getUint32(0, Endian.little);
-
+    Endian.little,
+  );
   if (offset + headerLen + length + 1 > buffer.length) {
     return (
       false,
       'log length:$length, end pos ${offset + headerLen + length + 1} > buffer.length:${buffer.length}',
     );
   }
-
-  if (buffer[offset + headerLen + length] != MAGIC_END) {
+  if (MAGIC_END != buffer[offset + headerLen + length]) {
     return (
       false,
       'log length:$length, buffer[${offset + headerLen + length}]:${buffer[offset + headerLen + length]} != MAGIC_END',
@@ -66,21 +77,30 @@ int lastSeq = 0;
 
   if (count <= 1) {
     return (true, '');
+  } else {
+    return isGoodLogBuffer(buffer, offset + headerLen + length + 1, count - 1);
   }
-
-  return isGoodLogBuffer(buffer, offset + headerLen + length + 1, count - 1);
 }
 
+/// 找到缓冲区中第一个有效的日志记录的起始位置
 int getLogStartPos(Uint8List buffer, int count) {
   for (int offset = 0; offset < buffer.length; offset++) {
-    final magicStart = buffer[offset];
-    if (magicStart == MAGIC_NO_COMPRESS_START ||
-        magicStart == MAGIC_NO_COMPRESS_START1 ||
-        magicStart == MAGIC_COMPRESS_START ||
-        magicStart == MAGIC_COMPRESS_START1 ||
-        magicStart == MAGIC_COMPRESS_START2 ||
-        magicStart == MAGIC_COMPRESS_NO_CRYPT_START) {
-      if (isGoodLogBuffer(buffer, offset, count).$1) {
+    int magicStart = buffer[offset];
+    if ([
+      MAGIC_NO_COMPRESS_START,
+      MAGIC_NO_COMPRESS_START1,
+      MAGIC_COMPRESS_START,
+      MAGIC_COMPRESS_START1,
+      MAGIC_COMPRESS_START2,
+      MAGIC_COMPRESS_NO_CRYPT_START,
+      MAGIC_NO_COMPRESS_NO_CRYPT_START,
+      MAGIC_SYNC_ZSTD_START,
+      MAGIC_SYNC_NO_CRYPT_ZSTD_START,
+      MAGIC_ASYNC_ZSTD_START,
+      MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
+    ].contains(magicStart)) {
+      var (isGood, _) = isGoodLogBuffer(buffer, offset, count);
+      if (isGood) {
         return offset;
       }
     }
@@ -88,169 +108,181 @@ int getLogStartPos(Uint8List buffer, int count) {
   return -1;
 }
 
-int decodeBuffer(Uint8List buffer, int offset, List<int> outBuffer) {
+/// 解码单个日志记录
+(int, Uint8List) decodeBuffer(Uint8List buffer, int offset) {
   if (offset >= buffer.length) {
-    return -1;
+    return (-1, Uint8List(0));
   }
 
-  final ret = isGoodLogBuffer(buffer, offset, 1);
-  if (!ret.$1) {
-    final fixPos = getLogStartPos(buffer.sublist(offset), 1);
-    if (fixPos == -1) {
-      return -1;
-    } else {
-      outBuffer.addAll(
+  var (isGood, errorMsg) = isGoodLogBuffer(buffer, offset, 1);
+  if (!isGood) {
+    int fixpos = getLogStartPos(buffer.sublist(offset), 1);
+    if (fixpos == -1) {
+      return (
+        -1,
         utf8.encode(
-          '[F]decode_log_file.py decode error len=$fixPos, result: ${ret.$2}\n',
+          '[F]decode_log_file.dart decode error len=${buffer.length - offset}, result:$errorMsg \n',
         ),
       );
-      offset += fixPos;
+    } else {
+      return (
+        offset + fixpos,
+        utf8.encode(
+          '[F]decode_log_file.dart decode error len=$fixpos, result:$errorMsg \n',
+        ),
+      );
     }
   }
 
-  final magicStart = buffer[offset];
+  int magicStart = buffer[offset];
   int cryptKeyLen;
-  switch (magicStart) {
-    case MAGIC_NO_COMPRESS_START:
-    case MAGIC_COMPRESS_START:
-    case MAGIC_COMPRESS_START1:
-      cryptKeyLen = 4;
-      break;
-    case MAGIC_COMPRESS_START2:
-    case MAGIC_NO_COMPRESS_START1:
-    case MAGIC_NO_COMPRESS_NO_CRYPT_START:
-    case MAGIC_COMPRESS_NO_CRYPT_START:
-      cryptKeyLen = 64;
-      break;
-    default:
-      outBuffer.addAll(
-        utf8.encode(
-          'in DecodeBuffer _buffer[$offset]:$magicStart != MAGIC_NUM_START',
-        ),
-      );
-      return -1;
-  }
-
-  final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
-  final length = ByteData.view(
-    buffer.buffer,
-    offset + headerLen - 4 - cryptKeyLen,
-  ).getUint32(0, Endian.little);
-
-  final tmpBuffer = Uint8List.fromList(
-    buffer.sublist(offset + headerLen, offset + headerLen + length),
-  );
-
-  final seq = ByteData.view(
-    buffer.buffer,
-    offset + headerLen - 4 - cryptKeyLen - 2 - 2,
-  ).getUint16(0, Endian.little);
-  // final beginHour = buffer[offset + headerLen - 4 - cryptKeyLen - 1 - 1];
-  // final endHour = buffer[offset + headerLen - 4 - cryptKeyLen - 1];
-
-  if (seq != 0 && seq != 1 && lastSeq != 0 && seq != lastSeq + 1) {
-    outBuffer.addAll(
+  if ([
+    MAGIC_NO_COMPRESS_START,
+    MAGIC_COMPRESS_START,
+    MAGIC_COMPRESS_START1,
+  ].contains(magicStart)) {
+    cryptKeyLen = 4;
+  } else if ([
+    MAGIC_COMPRESS_START2,
+    MAGIC_NO_COMPRESS_START1,
+    MAGIC_NO_COMPRESS_NO_CRYPT_START,
+    MAGIC_COMPRESS_NO_CRYPT_START,
+    MAGIC_SYNC_ZSTD_START,
+    MAGIC_SYNC_NO_CRYPT_ZSTD_START,
+    MAGIC_ASYNC_ZSTD_START,
+    MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
+  ].contains(magicStart)) {
+    cryptKeyLen = 64;
+  } else {
+    return (
+      -1,
       utf8.encode(
-        '[F]decode_log_file.py log seq:${lastSeq + 1}-${seq - 1} is missing\n',
+        'in decodeBuffer buffer[$offset]:$magicStart != MAGIC_NUM_START\n',
       ),
     );
+  }
+
+  int headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
+  ByteData byteData = ByteData.view(buffer.buffer, offset);
+  int length = byteData.getUint32(headerLen - 4 - cryptKeyLen, Endian.little);
+  int seq = byteData.getUint16(headerLen - 4 - cryptKeyLen - 2, Endian.little);
+
+  if (seq != 0 && seq != 1 && lastSeq != 0 && seq != (lastSeq + 1)) {
+    String msg =
+        '[F]decode_log_file.py log seq:${lastSeq + 1}-${seq - 1} is missing\n';
+    // 如果发生序列号跳跃，这里可以处理并返回错误信息
   }
 
   if (seq != 0) {
     lastSeq = seq;
   }
 
-  try {
-    final decompressor = ZLibCodec(
-      windowBits: ZLibOption.maxWindowBits,
-      raw: true,
-    );
+  Uint8List logData = buffer.sublist(
+    offset + headerLen,
+    offset + headerLen + length,
+  );
+  Uint8List decodedData;
 
-    switch (magicStart) {
-      case MAGIC_NO_COMPRESS_START1:
-      case MAGIC_COMPRESS_START2:
-        log("use wrong decode script");
-        break;
-      case MAGIC_COMPRESS_START:
-      case MAGIC_COMPRESS_NO_CRYPT_START:
-        outBuffer.addAll(decompressor.decode(tmpBuffer));
-        break;
-      case MAGIC_COMPRESS_START1:
-        final decompressData = <int>[];
-        var remainingBuffer = tmpBuffer;
-        while (remainingBuffer.isNotEmpty) {
-          final singleLogLen = ByteData.view(
-            remainingBuffer.buffer,
-            0,
-          ).getUint16(0, Endian.little);
-          decompressData.addAll(remainingBuffer.sublist(2, singleLogLen + 2));
-          remainingBuffer = remainingBuffer.sublist(singleLogLen + 2);
-        }
-        outBuffer.addAll(
-          decompressor.decode(Uint8List.fromList(decompressData)),
+  try {
+    if ([
+      MAGIC_NO_COMPRESS_START1,
+      MAGIC_COMPRESS_START2,
+      MAGIC_SYNC_ZSTD_START,
+      MAGIC_ASYNC_ZSTD_START,
+    ].contains(magicStart)) {
+      decodedData = utf8.encode("use wrong decode script\n");
+    } else if (MAGIC_ASYNC_NO_CRYPT_ZSTD_START == magicStart) {
+      decodedData = Uint8List.fromList(zstd.decode(logData));
+    } else if ([
+      MAGIC_COMPRESS_START,
+      MAGIC_COMPRESS_NO_CRYPT_START,
+    ].contains(magicStart)) {
+      decodedData = Uint8List.fromList(zlib.decode(logData));
+    } else if (MAGIC_COMPRESS_START1 == magicStart) {
+      // 解压逻辑
+      Uint8List decompressData = Uint8List(0);
+      int decompressOffset = 0;
+      while (decompressOffset < logData.length) {
+        ByteData singleLogByteData = ByteData.view(
+          logData.buffer,
+          logData.offsetInBytes + decompressOffset,
         );
-        break;
+        int singleLogLen = singleLogByteData.getUint16(0, Endian.little);
+        decompressData = Uint8List.fromList(
+          decompressData +
+              logData.sublist(
+                decompressOffset + 2,
+                decompressOffset + 2 + singleLogLen,
+              ),
+        );
+        decompressOffset += singleLogLen + 2;
+      }
+      decodedData = Uint8List.fromList(zlib.decode(decompressData));
+    } else {
+      decodedData = logData; // 无压缩情况
     }
   } catch (e) {
-    outBuffer.addAll(
-      utf8.encode('[F]decode_log_file.py decompress err, ${e.toString()}\n'),
-    );
-    return offset + headerLen + length + 1;
+    decodedData = utf8.encode('[F]decode_log_file.dart decompress err, $e\n');
   }
 
-  return offset + headerLen + length + 1;
+  return (offset + headerLen + length + 1, decodedData);
 }
 
-void parseFile(String file, String outfile) {
-  final fileBytes = File(file).readAsBytesSync();
-  final startPos = getLogStartPos(fileBytes, 2);
-  if (startPos == -1) {
+/// 解析文件，并将其解码内容写入新文件
+Future<void> parseFile(String inputFile, String outputFile) async {
+  lastSeq = 0;
+  File file = File(inputFile);
+  if (!await file.exists()) {
+    print('文件不存在: $inputFile');
     return;
   }
 
-  final outBuffer = <int>[];
+  Uint8List buffer = await file.readAsBytes();
+  int startPos = getLogStartPos(buffer, 2);
+  if (startPos == -1) {
+    print('在文件中找不到有效的日志记录');
+    return;
+  }
 
-  var currentPos = startPos;
+  List<int> outbuffer = [];
+  int currentOffset = startPos;
   while (true) {
-    currentPos = decodeBuffer(fileBytes, currentPos, outBuffer);
-    if (currentPos == -1) {
+    var (nextOffset, decodedData) = decodeBuffer(buffer, currentOffset);
+    if (nextOffset == -1) {
       break;
     }
+    outbuffer.addAll(decodedData);
+    currentOffset = nextOffset;
   }
 
-  if (outBuffer.isEmpty) {
+  if (outbuffer.isEmpty) {
     return;
   }
 
-  File(outfile).writeAsBytesSync(outBuffer);
+  File outFile = File(outputFile);
+  await outFile.writeAsBytes(outbuffer);
 }
 
-void main(List<String> arguments) {
-  if (arguments.length == 1) {
-    final dir = Directory(arguments[0]);
-    if (dir.existsSync()) {
-      for (final file
-          in dir
-              .listSync(recursive: false, followLinks: false)
-              .whereType<File>()) {
-        if (file.path.endsWith('.xlog')) {
-          lastSeq = 0;
-          parseFile(file.path, '${file.path}.log');
+Future<void> main(List<String> args) async {
+  if (args.length == 1) {
+    String path = args[0];
+    if (await Directory(path).exists()) {
+      var dir = Directory(path);
+      await for (var entity in dir.list()) {
+        if (entity is File && entity.path.endsWith('.xlog')) {
+          await parseFile(entity.path, '${entity.path}.log');
         }
       }
     } else {
-      parseFile(arguments[0], '${arguments[0]}.log');
+      await parseFile(path, '$path.log');
     }
-  } else if (arguments.length == 2) {
-    parseFile(arguments[0], arguments[1]);
+  } else if (args.length == 2) {
+    await parseFile(args[0], args[1]);
   } else {
-    for (final file
-        in Directory.current
-            .listSync(recursive: false, followLinks: false)
-            .whereType<File>()) {
-      if (file.path.endsWith('.xlog')) {
-        lastSeq = 0;
-        parseFile(file.path, '${file.path}.log');
+    var dir = Directory.current;
+    await for (var entity in dir.list()) {
+      if (entity is File && entity.path.endsWith('.xlog')) {
+        await parseFile(entity.path, '${entity.path}.log');
       }
     }
   }
