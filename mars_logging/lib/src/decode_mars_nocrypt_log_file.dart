@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
@@ -5,60 +6,54 @@ import 'dart:async';
 
 import 'package:es_compression/zstd.dart';
 
-const int MAGIC_NO_COMPRESS_START = 0x03;
-const int MAGIC_NO_COMPRESS_START1 = 0x06;
-const int MAGIC_NO_COMPRESS_NO_CRYPT_START = 0x08;
-const int MAGIC_COMPRESS_START = 0x04;
-const int MAGIC_COMPRESS_START1 = 0x05;
-const int MAGIC_COMPRESS_START2 = 0x07;
-const int MAGIC_COMPRESS_NO_CRYPT_START = 0x09;
+const MAGIC_NO_COMPRESS_START = 0x03;
+const MAGIC_NO_COMPRESS_START1 = 0x06;
+const MAGIC_NO_COMPRESS_NO_CRYPT_START = 0x08;
+const MAGIC_COMPRESS_START = 0x04;
+const MAGIC_COMPRESS_START1 = 0x05;
+const MAGIC_COMPRESS_START2 = 0x07;
+const MAGIC_COMPRESS_NO_CRYPT_START = 0x09;
 
-const int MAGIC_SYNC_ZSTD_START = 0x0A;
-const int MAGIC_SYNC_NO_CRYPT_ZSTD_START = 0x0B;
-const int MAGIC_ASYNC_ZSTD_START = 0x0C;
-const int MAGIC_ASYNC_NO_CRYPT_ZSTD_START = 0x0D;
+const MAGIC_SYNC_ZSTD_START = 0x0A;
+const MAGIC_SYNC_NO_CRYPT_ZSTD_START = 0x0B;
+const MAGIC_ASYNC_ZSTD_START = 0x0C;
+const MAGIC_ASYNC_NO_CRYPT_ZSTD_START = 0x0D;
 
-const int MAGIC_END = 0x00;
+const MAGIC_END = 0x00;
 
 int lastSeq = 0;
 
-/// 检查缓冲区中从指定偏移量开始的日志记录是否有效
 (bool, String) isGoodLogBuffer(Uint8List buffer, int offset, int count) {
   if (offset == buffer.length) {
     return (true, '');
   }
 
-  int magicStart = buffer[offset];
+  final magicStart = buffer[offset];
   int cryptKeyLen;
-
-  if ([
-    MAGIC_NO_COMPRESS_START,
-    MAGIC_COMPRESS_START,
-    MAGIC_COMPRESS_START1,
-  ].contains(magicStart)) {
+  if (magicStart == MAGIC_NO_COMPRESS_START ||
+      magicStart == MAGIC_COMPRESS_START ||
+      magicStart == MAGIC_COMPRESS_START1) {
     cryptKeyLen = 4;
-  } else if ([
-    MAGIC_COMPRESS_START2,
-    MAGIC_NO_COMPRESS_START1,
-    MAGIC_NO_COMPRESS_NO_CRYPT_START,
-    MAGIC_COMPRESS_NO_CRYPT_START,
-    MAGIC_SYNC_ZSTD_START,
-    MAGIC_SYNC_NO_CRYPT_ZSTD_START,
-    MAGIC_ASYNC_ZSTD_START,
-    MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
-  ].contains(magicStart)) {
+  } else if (magicStart == MAGIC_COMPRESS_START2 ||
+      magicStart == MAGIC_NO_COMPRESS_START1 ||
+      magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
+      magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
+      magicStart == MAGIC_SYNC_ZSTD_START ||
+      magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
+      magicStart == MAGIC_ASYNC_ZSTD_START ||
+      magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
     cryptKeyLen = 64;
   } else {
     return (false, 'buffer[$offset]:$magicStart != MAGIC_NUM_START');
   }
 
-  int headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
-  if (offset + headerLen + 1 > buffer.length) {
+  final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
+
+  if (offset + headerLen + 1 + 1 > buffer.length) {
     return (false, 'offset:$offset > buffer.length:${buffer.length}');
   }
-
-  ByteData byteData = ByteData.view(buffer.buffer);
-  int length = byteData.getUint32(
+  final bufferView = ByteData.view(buffer.buffer);
+  final length = bufferView.getUint32(
     offset + headerLen - 4 - cryptKeyLen,
     Endian.little,
   );
@@ -82,23 +77,20 @@ int lastSeq = 0;
   }
 }
 
-/// 找到缓冲区中第一个有效的日志记录的起始位置
 int getLogStartPos(Uint8List buffer, int count) {
   for (int offset = 0; offset < buffer.length; offset++) {
     int magicStart = buffer[offset];
-    if ([
-      MAGIC_NO_COMPRESS_START,
-      MAGIC_NO_COMPRESS_START1,
-      MAGIC_COMPRESS_START,
-      MAGIC_COMPRESS_START1,
-      MAGIC_COMPRESS_START2,
-      MAGIC_COMPRESS_NO_CRYPT_START,
-      MAGIC_NO_COMPRESS_NO_CRYPT_START,
-      MAGIC_SYNC_ZSTD_START,
-      MAGIC_SYNC_NO_CRYPT_ZSTD_START,
-      MAGIC_ASYNC_ZSTD_START,
-      MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
-    ].contains(magicStart)) {
+    if (magicStart == MAGIC_NO_COMPRESS_START ||
+        magicStart == MAGIC_NO_COMPRESS_START1 ||
+        magicStart == MAGIC_COMPRESS_START ||
+        magicStart == MAGIC_COMPRESS_START1 ||
+        magicStart == MAGIC_COMPRESS_START2 ||
+        magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
+        magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
+        magicStart == MAGIC_SYNC_ZSTD_START ||
+        magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
+        magicStart == MAGIC_ASYNC_ZSTD_START ||
+        magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
       var (isGood, _) = isGoodLogBuffer(buffer, offset, count);
       if (isGood) {
         return offset;
@@ -108,109 +100,104 @@ int getLogStartPos(Uint8List buffer, int count) {
   return -1;
 }
 
-/// 解码单个日志记录
-(int, Uint8List) decodeBuffer(Uint8List buffer, int offset) {
-  if (offset >= buffer.length) {
-    return (-1, Uint8List(0));
-  }
-
-  var (isGood, errorMsg) = isGoodLogBuffer(buffer, offset, 1);
+int decodeBuffer(Uint8List buffer, int offset, BytesBuilder outBuffer) {
+  if (offset >= buffer.length) return -1;
+  final (isGood, err) = isGoodLogBuffer(buffer, offset, 1);
   if (!isGood) {
-    int fixpos = getLogStartPos(buffer.sublist(offset), 1);
-    if (fixpos == -1) {
-      return (
-        -1,
-        utf8.encode(
-          '[F]decode_log_file.dart decode error len=${buffer.length - offset}, result:$errorMsg \n',
-        ),
-      );
+    int fixPos = getLogStartPos(buffer.sublist(offset), 1);
+    if (fixPos == -1) {
+      return -1;
     } else {
-      return (
-        offset + fixpos,
+      outBuffer.add(
         utf8.encode(
-          '[F]decode_log_file.dart decode error len=$fixpos, result:$errorMsg \n',
+          "[F]decode_log_file.dart decode error len=$fixPos, result:$err\n",
         ),
       );
+      offset += fixPos;
     }
   }
 
-  int magicStart = buffer[offset];
+  final magicStart = buffer[offset];
   int cryptKeyLen;
-  if ([
-    MAGIC_NO_COMPRESS_START,
-    MAGIC_COMPRESS_START,
-    MAGIC_COMPRESS_START1,
-  ].contains(magicStart)) {
+  if (magicStart == MAGIC_NO_COMPRESS_START ||
+      magicStart == MAGIC_COMPRESS_START ||
+      magicStart == MAGIC_COMPRESS_START1) {
     cryptKeyLen = 4;
-  } else if ([
-    MAGIC_COMPRESS_START2,
-    MAGIC_NO_COMPRESS_START1,
-    MAGIC_NO_COMPRESS_NO_CRYPT_START,
-    MAGIC_COMPRESS_NO_CRYPT_START,
-    MAGIC_SYNC_ZSTD_START,
-    MAGIC_SYNC_NO_CRYPT_ZSTD_START,
-    MAGIC_ASYNC_ZSTD_START,
-    MAGIC_ASYNC_NO_CRYPT_ZSTD_START,
-  ].contains(magicStart)) {
+  } else if (magicStart == MAGIC_COMPRESS_START2 ||
+      magicStart == MAGIC_NO_COMPRESS_START1 ||
+      magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
+      magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
+      magicStart == MAGIC_SYNC_ZSTD_START ||
+      magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
+      magicStart == MAGIC_ASYNC_ZSTD_START ||
+      magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
     cryptKeyLen = 64;
   } else {
-    return (
-      -1,
+    outBuffer.add(
       utf8.encode(
         'in decodeBuffer buffer[$offset]:$magicStart != MAGIC_NUM_START\n',
       ),
     );
+    return -1;
   }
 
-  int headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
-  ByteData byteData = ByteData.view(buffer.buffer, offset);
-  int length = byteData.getUint32(headerLen - 4 - cryptKeyLen, Endian.little);
-  int seq = byteData.getUint16(headerLen - 4 - cryptKeyLen - 2, Endian.little);
+  final bufferView = ByteData.view(buffer.buffer, offset);
+  final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
+  final length = bufferView.getUint32(
+    headerLen - 4 - cryptKeyLen,
+    Endian.little,
+  );
+
+  final seq = bufferView.getUint16(
+    headerLen - 4 - cryptKeyLen - 2 - 2,
+    Endian.little,
+  );
 
   if (seq != 0 && seq != 1 && lastSeq != 0 && seq != (lastSeq + 1)) {
-    String msg =
-        '[F]decode_log_file.py log seq:${lastSeq + 1}-${seq - 1} is missing\n';
-    // 如果发生序列号跳跃，这里可以处理并返回错误信息
+    outBuffer.add(
+      utf8.encode(
+        "[F]decode_log_file.py log seq:${lastSeq + 1}-${seq - 1} is missing\n",
+      ),
+    );
   }
 
   if (seq != 0) {
     lastSeq = seq;
   }
 
-  Uint8List logData = buffer.sublist(
+  var tmpBuffer = buffer.sublist(
     offset + headerLen,
     offset + headerLen + length,
   );
   Uint8List decodedData;
 
   try {
-    if ([
-      MAGIC_NO_COMPRESS_START1,
-      MAGIC_COMPRESS_START2,
-      MAGIC_SYNC_ZSTD_START,
-      MAGIC_ASYNC_ZSTD_START,
-    ].contains(magicStart)) {
-      decodedData = utf8.encode("use wrong decode script\n");
+    if (magicStart == MAGIC_NO_COMPRESS_START1 ||
+        magicStart == MAGIC_COMPRESS_START2 ||
+        magicStart == MAGIC_SYNC_ZSTD_START ||
+        magicStart == MAGIC_ASYNC_ZSTD_START) {
+      log('use wrong decode script');
     } else if (MAGIC_ASYNC_NO_CRYPT_ZSTD_START == magicStart) {
-      decodedData = Uint8List.fromList(zstd.decode(logData));
+      final decompressed = zstd.decode(tmpBuffer);
+      decodedData = Uint8List.fromList(zstd.decode(tmpBuffer));
     } else if ([
       MAGIC_COMPRESS_START,
       MAGIC_COMPRESS_NO_CRYPT_START,
     ].contains(magicStart)) {
-      decodedData = Uint8List.fromList(zlib.decode(logData));
+      decodedData = Uint8List.fromList(zlib.decode(tmpBuffer));
     } else if (MAGIC_COMPRESS_START1 == magicStart) {
       // 解压逻辑
       Uint8List decompressData = Uint8List(0);
       int decompressOffset = 0;
-      while (decompressOffset < logData.length) {
+      while (decompressOffset < tmpBuffer.length) {
         ByteData singleLogByteData = ByteData.view(
-          logData.buffer,
-          logData.offsetInBytes + decompressOffset,
+          tmpBuffer.buffer,
+          tmpBuffer.offsetInBytes + decompressOffset,
         );
         int singleLogLen = singleLogByteData.getUint16(0, Endian.little);
         decompressData = Uint8List.fromList(
           decompressData +
-              logData.sublist(
+              tmpBuffer.sublist(
                 decompressOffset + 2,
                 decompressOffset + 2 + singleLogLen,
               ),
@@ -219,7 +206,7 @@ int getLogStartPos(Uint8List buffer, int count) {
       }
       decodedData = Uint8List.fromList(zlib.decode(decompressData));
     } else {
-      decodedData = logData; // 无压缩情况
+      decodedData = tmpBuffer; // 无压缩情况
     }
   } catch (e) {
     decodedData = utf8.encode('[F]decode_log_file.dart decompress err, $e\n');
