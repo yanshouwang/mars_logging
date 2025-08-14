@@ -2,49 +2,54 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'dart:async';
 
-import 'package:es_compression/zstd.dart';
+import 'util.dart';
 
-const MAGIC_NO_COMPRESS_START = 0x03;
-const MAGIC_NO_COMPRESS_START1 = 0x06;
-const MAGIC_NO_COMPRESS_NO_CRYPT_START = 0x08;
-const MAGIC_COMPRESS_START = 0x04;
-const MAGIC_COMPRESS_START1 = 0x05;
-const MAGIC_COMPRESS_START2 = 0x07;
-const MAGIC_COMPRESS_NO_CRYPT_START = 0x09;
+const kMagicNoCompressStart = 0x03;
+const kMagicNoCompressStart1 = 0x06;
+const kMagicNoCompressNoCryptStart = 0x08;
+const kMagicCompressStart = 0x04;
+const kMagicCompressStart1 = 0x05;
+const kMagicCompressStart2 = 0x07;
+const kMagicCompressNoCryptStart = 0x09;
 
-const MAGIC_SYNC_ZSTD_START = 0x0A;
-const MAGIC_SYNC_NO_CRYPT_ZSTD_START = 0x0B;
-const MAGIC_ASYNC_ZSTD_START = 0x0C;
-const MAGIC_ASYNC_NO_CRYPT_ZSTD_START = 0x0D;
+const kMagicSyncZstdStart = 0x0A;
+const kMagicSyncNoCryptZstdStart = 0x0B;
+const kMagicAsyncZstdStart = 0x0C;
+const kMagicAsyncNoCryptZstdStart = 0x0D;
 
-const MAGIC_END = 0x00;
+const kMagicEnd = 0x00;
 
-int lastSeq = 0;
+var lastSeq = 0;
+
+ZLibCodec get zlib =>
+    ZLibCodec(windowBits: ZLibOption.maxWindowBits, raw: true);
 
 (bool, String) isGoodLogBuffer(Uint8List buffer, int offset, int count) {
   if (offset == buffer.length) {
     return (true, '');
   }
 
+  final int cryptKeyLen;
   final magicStart = buffer[offset];
-  int cryptKeyLen;
-  if (magicStart == MAGIC_NO_COMPRESS_START ||
-      magicStart == MAGIC_COMPRESS_START ||
-      magicStart == MAGIC_COMPRESS_START1) {
-    cryptKeyLen = 4;
-  } else if (magicStart == MAGIC_COMPRESS_START2 ||
-      magicStart == MAGIC_NO_COMPRESS_START1 ||
-      magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
-      magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
-      magicStart == MAGIC_SYNC_ZSTD_START ||
-      magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
-      magicStart == MAGIC_ASYNC_ZSTD_START ||
-      magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
-    cryptKeyLen = 64;
-  } else {
-    return (false, 'buffer[$offset]:$magicStart != MAGIC_NUM_START');
+  switch (magicStart) {
+    case kMagicNoCompressStart:
+    case kMagicCompressStart:
+    case kMagicCompressStart1:
+      cryptKeyLen = 4;
+      break;
+    case kMagicCompressStart2:
+    case kMagicNoCompressStart1:
+    case kMagicNoCompressNoCryptStart:
+    case kMagicCompressNoCryptStart:
+    case kMagicSyncZstdStart:
+    case kMagicSyncNoCryptZstdStart:
+    case kMagicAsyncZstdStart:
+    case kMagicAsyncNoCryptZstdStart:
+      cryptKeyLen = 64;
+      break;
+    default:
+      return (false, 'buffer[$offset]:$magicStart != MAGIC_NUM_START');
   }
 
   final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
@@ -52,8 +57,8 @@ int lastSeq = 0;
   if (offset + headerLen + 1 + 1 > buffer.length) {
     return (false, 'offset:$offset > buffer.length:${buffer.length}');
   }
-  final bufferView = ByteData.view(buffer.buffer);
-  final length = bufferView.getUint32(
+  final view = ByteData.view(buffer.buffer);
+  final length = view.getUint32(
     offset + headerLen - 4 - cryptKeyLen,
     Endian.little,
   );
@@ -63,7 +68,7 @@ int lastSeq = 0;
       'log length:$length, end pos ${offset + headerLen + length + 1} > buffer.length:${buffer.length}',
     );
   }
-  if (MAGIC_END != buffer[offset + headerLen + length]) {
+  if (kMagicEnd != buffer[offset + headerLen + length]) {
     return (
       false,
       'log length:$length, buffer[${offset + headerLen + length}]:${buffer[offset + headerLen + length]} != MAGIC_END',
@@ -78,23 +83,21 @@ int lastSeq = 0;
 }
 
 int getLogStartPos(Uint8List buffer, int count) {
-  for (int offset = 0; offset < buffer.length; offset++) {
-    int magicStart = buffer[offset];
-    if (magicStart == MAGIC_NO_COMPRESS_START ||
-        magicStart == MAGIC_NO_COMPRESS_START1 ||
-        magicStart == MAGIC_COMPRESS_START ||
-        magicStart == MAGIC_COMPRESS_START1 ||
-        magicStart == MAGIC_COMPRESS_START2 ||
-        magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
-        magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
-        magicStart == MAGIC_SYNC_ZSTD_START ||
-        magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
-        magicStart == MAGIC_ASYNC_ZSTD_START ||
-        magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
-      var (isGood, _) = isGoodLogBuffer(buffer, offset, count);
-      if (isGood) {
-        return offset;
-      }
+  for (var i = 0; i < buffer.length; i++) {
+    final magicStart = buffer[i];
+    if (magicStart == kMagicNoCompressStart ||
+        magicStart == kMagicNoCompressStart1 ||
+        magicStart == kMagicCompressStart ||
+        magicStart == kMagicCompressStart1 ||
+        magicStart == kMagicCompressStart2 ||
+        magicStart == kMagicCompressNoCryptStart ||
+        magicStart == kMagicNoCompressNoCryptStart ||
+        magicStart == kMagicSyncZstdStart ||
+        magicStart == kMagicSyncNoCryptZstdStart ||
+        magicStart == kMagicAsyncZstdStart ||
+        magicStart == kMagicAsyncNoCryptZstdStart) {
+      final (ok, _) = isGoodLogBuffer(buffer, i, count);
+      if (ok) return i;
     }
   }
   return -1;
@@ -102,9 +105,9 @@ int getLogStartPos(Uint8List buffer, int count) {
 
 int decodeBuffer(Uint8List buffer, int offset, BytesBuilder outBuffer) {
   if (offset >= buffer.length) return -1;
-  final (isGood, err) = isGoodLogBuffer(buffer, offset, 1);
-  if (!isGood) {
-    int fixPos = getLogStartPos(buffer.sublist(offset), 1);
+  final (ok, err) = isGoodLogBuffer(buffer, offset, 1);
+  if (!ok) {
+    final fixPos = getLogStartPos(buffer.sublist(offset), 1);
     if (fixPos == -1) {
       return -1;
     } else {
@@ -117,41 +120,42 @@ int decodeBuffer(Uint8List buffer, int offset, BytesBuilder outBuffer) {
     }
   }
 
+  final int cryptKeyLen;
   final magicStart = buffer[offset];
-  int cryptKeyLen;
-  if (magicStart == MAGIC_NO_COMPRESS_START ||
-      magicStart == MAGIC_COMPRESS_START ||
-      magicStart == MAGIC_COMPRESS_START1) {
-    cryptKeyLen = 4;
-  } else if (magicStart == MAGIC_COMPRESS_START2 ||
-      magicStart == MAGIC_NO_COMPRESS_START1 ||
-      magicStart == MAGIC_NO_COMPRESS_NO_CRYPT_START ||
-      magicStart == MAGIC_COMPRESS_NO_CRYPT_START ||
-      magicStart == MAGIC_SYNC_ZSTD_START ||
-      magicStart == MAGIC_SYNC_NO_CRYPT_ZSTD_START ||
-      magicStart == MAGIC_ASYNC_ZSTD_START ||
-      magicStart == MAGIC_ASYNC_NO_CRYPT_ZSTD_START) {
-    cryptKeyLen = 64;
-  } else {
-    outBuffer.add(
-      utf8.encode(
-        'in decodeBuffer buffer[$offset]:$magicStart != MAGIC_NUM_START\n',
-      ),
-    );
-    return -1;
+  switch (magicStart) {
+    case kMagicNoCompressStart:
+    case kMagicCompressStart:
+    case kMagicCompressStart1:
+      cryptKeyLen = 4;
+    case kMagicCompressStart2:
+    case kMagicNoCompressStart1:
+    case kMagicNoCompressNoCryptStart:
+    case kMagicCompressNoCryptStart:
+    case kMagicSyncZstdStart:
+    case kMagicSyncNoCryptZstdStart:
+    case kMagicAsyncZstdStart:
+    case kMagicAsyncNoCryptZstdStart:
+      cryptKeyLen = 64;
+      break;
+    default:
+      outBuffer.add(
+        utf8.encode(
+          'in decodeBuffer buffer[$offset]:$magicStart != MAGIC_NUM_START\n',
+        ),
+      );
+      return -1;
   }
 
-  final bufferView = ByteData.view(buffer.buffer, offset);
+  final view = ByteData.view(buffer.buffer, offset);
   final headerLen = 1 + 2 + 1 + 1 + 4 + cryptKeyLen;
-  final length = bufferView.getUint32(
-    headerLen - 4 - cryptKeyLen,
-    Endian.little,
-  );
+  final length = view.getUint32(headerLen - 4 - cryptKeyLen, Endian.little);
 
-  final seq = bufferView.getUint16(
+  final seq = view.getUint16(
     headerLen - 4 - cryptKeyLen - 2 - 2,
     Endian.little,
   );
+  // final beginHour = view.getUint8(headerLen - 4 - cryptKeyLen - 1 - 1);
+  // final endHour = view.getUint8(headerLen - 4 - cryptKeyLen - 1);
 
   if (seq != 0 && seq != 1 && lastSeq != 0 && seq != (lastSeq + 1)) {
     outBuffer.add(
@@ -169,108 +173,95 @@ int decodeBuffer(Uint8List buffer, int offset, BytesBuilder outBuffer) {
     offset + headerLen,
     offset + headerLen + length,
   );
-  Uint8List decodedData;
 
   try {
-    if (magicStart == MAGIC_NO_COMPRESS_START1 ||
-        magicStart == MAGIC_COMPRESS_START2 ||
-        magicStart == MAGIC_SYNC_ZSTD_START ||
-        magicStart == MAGIC_ASYNC_ZSTD_START) {
-      log('use wrong decode script');
-    } else if (MAGIC_ASYNC_NO_CRYPT_ZSTD_START == magicStart) {
-      final decompressed = zstd.decode(tmpBuffer);
-      decodedData = Uint8List.fromList(zstd.decode(tmpBuffer));
-    } else if ([
-      MAGIC_COMPRESS_START,
-      MAGIC_COMPRESS_NO_CRYPT_START,
-    ].contains(magicStart)) {
-      decodedData = Uint8List.fromList(zlib.decode(tmpBuffer));
-    } else if (MAGIC_COMPRESS_START1 == magicStart) {
-      // 解压逻辑
-      Uint8List decompressData = Uint8List(0);
-      int decompressOffset = 0;
-      while (decompressOffset < tmpBuffer.length) {
-        ByteData singleLogByteData = ByteData.view(
-          tmpBuffer.buffer,
-          tmpBuffer.offsetInBytes + decompressOffset,
-        );
-        int singleLogLen = singleLogByteData.getUint16(0, Endian.little);
-        decompressData = Uint8List.fromList(
-          decompressData +
-              tmpBuffer.sublist(
-                decompressOffset + 2,
-                decompressOffset + 2 + singleLogLen,
-              ),
-        );
-        decompressOffset += singleLogLen + 2;
-      }
-      decodedData = Uint8List.fromList(zlib.decode(decompressData));
-    } else {
-      decodedData = tmpBuffer; // 无压缩情况
-    }
-  } catch (e) {
-    decodedData = utf8.encode('[F]decode_log_file.dart decompress err, $e\n');
-  }
-
-  return (offset + headerLen + length + 1, decodedData);
-}
-
-/// 解析文件，并将其解码内容写入新文件
-Future<void> parseFile(String inputFile, String outputFile) async {
-  lastSeq = 0;
-  File file = File(inputFile);
-  if (!await file.exists()) {
-    print('文件不存在: $inputFile');
-    return;
-  }
-
-  Uint8List buffer = await file.readAsBytes();
-  int startPos = getLogStartPos(buffer, 2);
-  if (startPos == -1) {
-    print('在文件中找不到有效的日志记录');
-    return;
-  }
-
-  List<int> outbuffer = [];
-  int currentOffset = startPos;
-  while (true) {
-    var (nextOffset, decodedData) = decodeBuffer(buffer, currentOffset);
-    if (nextOffset == -1) {
-      break;
-    }
-    outbuffer.addAll(decodedData);
-    currentOffset = nextOffset;
-  }
-
-  if (outbuffer.isEmpty) {
-    return;
-  }
-
-  File outFile = File(outputFile);
-  await outFile.writeAsBytes(outbuffer);
-}
-
-Future<void> main(List<String> args) async {
-  if (args.length == 1) {
-    String path = args[0];
-    if (await Directory(path).exists()) {
-      var dir = Directory(path);
-      await for (var entity in dir.list()) {
-        if (entity is File && entity.path.endsWith('.xlog')) {
-          await parseFile(entity.path, '${entity.path}.log');
+    switch (magicStart) {
+      case kMagicNoCompressStart1:
+      case kMagicCompressStart2:
+      case kMagicSyncZstdStart:
+      case kMagicAsyncZstdStart:
+        log('use wrong decode script');
+        break;
+      case kMagicAsyncNoCryptZstdStart:
+        tmpBuffer = zstd.decode(tmpBuffer).toUint8List();
+        break;
+      case kMagicCompressStart:
+      case kMagicCompressNoCryptStart:
+        tmpBuffer = zlib.decode(tmpBuffer).toUint8List();
+        break;
+      case kMagicCompressStart1:
+        final decompressData = BytesBuilder();
+        while (tmpBuffer.isNotEmpty) {
+          final tmpView = ByteData.view(tmpBuffer.buffer);
+          final singleLogLen = tmpView.getUint16(0, Endian.little);
+          decompressData.add(tmpBuffer.sublist(2, singleLogLen + 2));
+          tmpBuffer = tmpBuffer.sublist(singleLogLen + 2);
         }
-      }
-    } else {
-      await parseFile(path, '$path.log');
+        tmpBuffer = zlib.decode(decompressData.toBytes()).toUint8List();
+        break;
+      default:
+        break;
     }
-  } else if (args.length == 2) {
-    await parseFile(args[0], args[1]);
-  } else {
-    var dir = Directory.current;
-    await for (var entity in dir.list()) {
-      if (entity is File && entity.path.endsWith('.xlog')) {
-        await parseFile(entity.path, '${entity.path}.log');
+    outBuffer.add(tmpBuffer);
+  } catch (e) {
+    outBuffer.add(utf8.encode('[F]decode_log_file.dart decompress err, $e\n'));
+  }
+
+  return offset + headerLen + length + 1;
+}
+
+void parseFile(File file, File outFile) {
+  final buffer = file.readAsBytesSync();
+  var startPos = getLogStartPos(buffer, 2);
+  if (startPos == -1) return;
+  final outbuffer = BytesBuilder();
+  while (true) {
+    startPos = decodeBuffer(buffer, startPos, outbuffer);
+    if (startPos == -1) break;
+  }
+  if (outbuffer.isEmpty) return;
+  outFile.writeAsBytesSync(outbuffer.toBytes());
+}
+
+void main(List<String> args) {
+  switch (args.length) {
+    case 1:
+      final path = args[0];
+      if (path.isDirectory) {
+        final files =
+            Directory(path)
+                .listSync()
+                .whereType<File>()
+                .where((e) => e.path.endsWith('.xlog'))
+                .toList();
+        for (var file in files) {
+          lastSeq = 0;
+          final outFile = File(file.path.replaceExtension('log'));
+          parseFile(file, outFile);
+        }
+      } else {
+        final file = File(path);
+        final outFile = File(file.path.replaceExtension('log'));
+        parseFile(file, outFile);
       }
-    }
+      break;
+    case 2:
+      final file = File(args[0]);
+      final outFile = File(args[1]);
+      parseFile(file, outFile);
+      break;
+    default:
+      var files =
+          Directory.current
+              .listSync()
+              .whereType<File>()
+              .where((e) => e.path.endsWith('.xlog'))
+              .toList();
+      for (var file in files) {
+        lastSeq = 0;
+        final outFile = File(file.path.replaceExtension('log'));
+        parseFile(file, outFile);
+      }
+      break;
   }
 }

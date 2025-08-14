@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -23,16 +24,16 @@ void main() {
   final keyPair = keyGen.generateKeyPair();
 
   // Extract the private and public keys
-  final privateKey = keyPair.privateKey;
-  final publicKey = keyPair.publicKey;
+  final privKey = keyPair.privateKey;
+  final pubKey = keyPair.publicKey;
 
   // Print the private key in hex format
-  print("save private key");
-  print(hex.encode(utils.encodeBigInt(privateKey.d!)));
+  log("save private key");
+  log(hex.encode(utils.encodeBigInt(privKey.d!)));
 
   // Print the public key components (x and y) in hex format
-  print("\nappender_open's parameter:");
-  final publicKeyX = utils.encodeBigInt(publicKey.Q!.x!.toBigInteger());
-  final publicKeyY = utils.encodeBigInt(publicKey.Q!.y!.toBigInteger());
-  print("${hex.encode(publicKeyX)}${hex.encode(publicKeyY)}");
+  log("\nappender_open's parameter:");
+  final pubKeyX = utils.encodeBigInt(pubKey.Q!.x!.toBigInteger());
+  final pubKeyY = utils.encodeBigInt(pubKey.Q!.y!.toBigInteger());
+  log("${hex.encode(pubKeyX)}${hex.encode(pubKeyY)}");
 }

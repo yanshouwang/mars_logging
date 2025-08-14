@@ -15,6 +15,7 @@ Widget _defaultEmptyBuilder(BuildContext context) {
 
 class XLogView extends StatefulWidget {
   final String xlogPath;
+  final String privKey;
   final TextStyle? style;
   final EdgeInsets? padding;
   final WidgetBuilder loadingBuilder;
@@ -23,6 +24,7 @@ class XLogView extends StatefulWidget {
   const XLogView({
     super.key,
     required this.xlogPath,
+    this.privKey = '',
     this.style,
     this.padding,
     this.emtpyBuilder = _defaultEmptyBuilder,
@@ -48,7 +50,8 @@ class _XLogViewState extends State<XLogView> {
   @override
   void didUpdateWidget(covariant XLogView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.xlogPath != oldWidget.xlogPath) {
+    if (widget.xlogPath != oldWidget.xlogPath ||
+        widget.privKey != oldWidget.privKey) {
       _loadLines();
     }
   }
@@ -91,7 +94,7 @@ class _XLogViewState extends State<XLogView> {
     try {
       final xlog = XFile(widget.xlogPath);
       final xlogBytes = await xlog.readAsBytes();
-      final logBytes = await XLog.decode(xlogBytes);
+      final logBytes = await XLog.decode(xlogBytes, privKey: widget.privKey);
       final logStream = Stream<List<int>>.value(logBytes);
       final lineSplitter = LineSplitter();
       lines.value =

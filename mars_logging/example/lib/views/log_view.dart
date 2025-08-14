@@ -24,6 +24,8 @@ class LogView extends StatelessWidget {
                   : CupertinoDesktopTextSelectionControls(),
           child: XLogView(
             xlogPath: logPath,
+            privKey:
+                '0097e4f5f5857b706ea44aaea1ca0a34a678096385d68344edbdc10c9ad2fb9456',
             style: theme.textTheme.textStyle.copyWith(fontSize: 14.0),
             padding: EdgeInsets.all(16.0),
           ),

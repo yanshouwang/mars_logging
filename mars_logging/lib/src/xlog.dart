@@ -1,10 +1,10 @@
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:mars_logging/src/decode_mars_crypt_log_file.dart';
 import 'package:mars_logging_platform_interface/mars_logging_platform_interface.dart';
-
-import 'decode_mars_nocrypt_log_file.dart';
 
 abstract base class XLog {
   static XLogApi get _api => XLogApi.instance;
@@ -90,21 +90,21 @@ abstract base class XLog {
     }
   }
 
-  static Future<Uint8List> decode(Uint8List buffer) {
+  static Future<Uint8List> decode(Uint8List buffer, {String privKey = ''}) {
     return Isolate.run(() {
       final startPos = getLogStartPos(buffer, 2);
       if (startPos == -1) {
-        throw ArgumentError.notNull('startPos');
+        throw ArgumentError.value(startPos, 'startPos');
       }
-      final outBuffer = <int>[];
+      final outBuffer = BytesBuilder();
       var currentPos = startPos;
       while (true) {
-        currentPos = decodeBuffer(buffer, currentPos, outBuffer);
+        currentPos = decodeBuffer(buffer, currentPos, outBuffer, privKey);
         if (currentPos == -1) {
           break;
         }
       }
-      return Uint8List.fromList(outBuffer);
+      return outBuffer.toBytes();
     });
   }
 }
