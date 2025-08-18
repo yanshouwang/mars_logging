@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:mars_logging/src/decode_mars_crypt_log_file.dart';
 import 'package:mars_logging_platform_interface/mars_logging_platform_interface.dart';
@@ -91,7 +92,11 @@ abstract base class XLog {
   }
 
   static Future<Uint8List> decode(Uint8List buffer, {String privKey = ''}) {
+    // Identify the root isolate to pass to the background isolate.
+    final rootIsolateToken = RootIsolateToken.instance!;
     return Isolate.run(() {
+      // Register the background isolate with the root isolate.
+      BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
       final startPos = getLogStartPos(buffer, 2);
       if (startPos == -1) {
         throw ArgumentError.value(startPos, 'startPos');

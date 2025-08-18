@@ -1,7 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
+
+import 'package:zstd/zstd.dart';
 
 import 'util.dart';
 
@@ -180,7 +181,7 @@ int decodeBuffer(Uint8List buffer, int offset, BytesBuilder outBuffer) {
       case kMagicCompressStart2:
       case kMagicSyncZstdStart:
       case kMagicAsyncZstdStart:
-        log('use wrong decode script');
+        stdout.writeln('use wrong decode script');
         break;
       case kMagicAsyncNoCryptZstdStart:
         tmpBuffer = zstd.decode(tmpBuffer).toUint8List();

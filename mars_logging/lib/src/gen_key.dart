@@ -1,10 +1,8 @@
-import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:convert/convert.dart';
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/src/utils.dart' as utils;
 
 void main() {
   // Use the secp256k1 curve, which is the same as in the Python code
@@ -28,12 +26,13 @@ void main() {
   final pubKey = keyPair.publicKey;
 
   // Print the private key in hex format
-  log("save private key");
-  log(hex.encode(utils.encodeBigInt(privKey.d!)));
+  stdout.writeln("save private key");
+  stdout.writeln(privKey.d!.toRadixString(16));
 
   // Print the public key components (x and y) in hex format
-  log("\nappender_open's parameter:");
-  final pubKeyX = utils.encodeBigInt(pubKey.Q!.x!.toBigInteger());
-  final pubKeyY = utils.encodeBigInt(pubKey.Q!.y!.toBigInteger());
-  log("${hex.encode(pubKeyX)}${hex.encode(pubKeyY)}");
+  stdout.writeln("\nappender_open's parameter:");
+
+  final pubKeyX = pubKey.Q!.x!.toBigInteger()!.toRadixString(16);
+  final pubKeyY = pubKey.Q!.y!.toBigInteger()!.toRadixString(16);
+  stdout.writeln("$pubKeyX$pubKeyY");
 }

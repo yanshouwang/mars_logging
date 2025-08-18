@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:convert/convert.dart';
 import 'package:pointycastle/export.dart';
+import 'package:zstd/zstd.dart';
 
 import 'util.dart';
 
@@ -25,9 +25,9 @@ const kMagicEnd = 0x00;
 var lastSeq = 0;
 
 const kPrivKey =
-    "145aa7717bf9745b91e9569b80bbf1eedaa6cc6cd0e26317d810e35710f44cf8";
+    '145aa7717bf9745b91e9569b80bbf1eedaa6cc6cd0e26317d810e35710f44cf8';
 const kPubKey =
-    "572d1e2710ae5fbca54c76a382fdd44050b3a675cb2bf39feebe85ef63d947aff0fa4943f1112e8b6af34bebebbaefa1a0aae055d9259b89a1858f7cc9af9df1";
+    '572d1e2710ae5fbca54c76a382fdd44050b3a675cb2bf39feebe85ef63d947aff0fa4943f1112e8b6af34bebebbaefa1a0aae055d9259b89a1858f7cc9af9df1';
 
 ZLibCodec get zlib =>
     ZLibCodec(windowBits: ZLibOption.maxWindowBits, raw: true);
@@ -226,16 +226,16 @@ int decodeBuffer(
         final ecParams = ECCurve_secp256k1();
         final ecPubKeyX = buffer.sublist(
           offset + headerLen - cryptKeyLen,
-          cryptKeyLen ~/ 2,
+          offset + headerLen - cryptKeyLen ~/ 2,
         );
         final ecPubKeyY = buffer.sublist(
           offset + headerLen - cryptKeyLen ~/ 2,
-          cryptKeyLen ~/ 2,
+          offset + headerLen,
         );
         final ecPubKey = ECPublicKey(
           ecParams.curve.createPoint(
-            BigInt.parse(hex.encode(ecPubKeyX), radix: 16),
-            BigInt.parse(hex.encode(ecPubKeyY), radix: 16),
+            ecPubKeyX.toBigInt(),
+            ecPubKeyY.toBigInt(),
           ),
           ecParams,
         );
@@ -244,7 +244,7 @@ int decodeBuffer(
         final ecAgreement = ECDHBasicAgreement()..init(ecPrivKey);
         final teaKey = ecAgreement.calculateAgreement(ecPubKey).toUint8List();
 
-        tmpBuffer = teaDecrypt(tmpBuffer.sublist(64), teaKey);
+        tmpBuffer = teaDecrypt(tmpBuffer, teaKey);
         if (magicStart == kMagicCompressStart2) {
           tmpBuffer = zlib.decode(tmpBuffer).toUint8List();
         } else {

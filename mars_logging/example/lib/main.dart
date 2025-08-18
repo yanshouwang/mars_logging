@@ -28,7 +28,7 @@ void onStartUp() async {
   final compressMode = CompressMode.zstd;
   final compressLevel = CompressLevel.level6;
   final pubKey =
-      '405aad7012748d9936bd1e2135821e46fbc6c57a50e050b63ff2f235cc094b3b008235b2f720f79f87fbb951eda74f80567f3a8c650c0ba8f3c20ab814d24770ce';
+      'f3d382d0bd7e33356d8dc497e1f4b3f93f8d4f96d0fdddda66e4eaf9abb50564ce356990d7af20a47cccfb8c3e4b9070c9a56fad0ffd07d0114238b950a36abc';
   final useConsole = kDebugMode;
   final maxFileSize = 10 * 1024 * 1024;
   final maxAliveDuration = 30 * 24 * 60 * 60;

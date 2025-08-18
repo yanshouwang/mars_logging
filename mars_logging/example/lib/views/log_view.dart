@@ -25,7 +25,7 @@ class LogView extends StatelessWidget {
           child: XLogView(
             xlogPath: logPath,
             privKey:
-                '0097e4f5f5857b706ea44aaea1ca0a34a678096385d68344edbdc10c9ad2fb9456',
+                'c030b50a82ac27f2b14b63781a4a18fe22d92ca456636d5401743fb375aefafe',
             style: theme.textTheme.textStyle.copyWith(fontSize: 14.0),
             padding: EdgeInsets.all(16.0),
           ),
