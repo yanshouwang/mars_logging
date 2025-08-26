@@ -1,48 +1,29 @@
 PODS:
-  - file_selector_macos (0.0.1):
-    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - mars_logging_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
     - OpenSSL-Universal (~> 1.0)
   - OpenSSL-Universal (1.1.2301)
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - zstd (0.0.1):
-    - FlutterMacOS
 
 DEPENDENCIES:
-  - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - mars_logging_darwin (from `Flutter/ephemeral/.symlinks/plugins/mars_logging_darwin/darwin`)
-  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
-  - zstd (from `Flutter/ephemeral/.symlinks/plugins/zstd/macos`)
 
 SPEC REPOS:
   trunk:
     - OpenSSL-Universal
 
 EXTERNAL SOURCES:
-  file_selector_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   mars_logging_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/mars_logging_darwin/darwin
-  path_provider_foundation:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
-  zstd:
-    :path: Flutter/ephemeral/.symlinks/plugins/zstd/macos
 
 SPEC CHECKSUMS:
-  file_selector_macos: 6280b52b459ae6c590af5d78fc35c7267a3c4b31
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  mars_logging_darwin: efb6b3a4a4e736caaa4c979d139b3dce5d07f379
+  mars_logging_darwin: 1ea2e32eb51bd3f37f3f20396c2e3b4eed41c559
   OpenSSL-Universal: ca89c20240633a77c776082ba76b7d90f992bf77
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  zstd: 3d05445ad5281c6f47041d617ff516147fdb28b1
 
 PODFILE CHECKSUM: 7eb978b976557c8c1cd717d8185ec483fd090a82
 

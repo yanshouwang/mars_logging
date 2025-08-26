@@ -1,3 +1,9 @@
+## 1.0.0-dev.1
+
+* Add compressMode, compressLevel, pubKey, maxFileSize & maxAliveDuration
+* Add decode_mars_crypt_log_file.dart
+* Add gen_key.dart
+
 ## 1.0.0-dev.0
 
 * Use fvm 3.29.3

@@ -1,0 +1,15 @@
+{
+  "originHash" : "37db636ff582305901d90a1b44793510cf6ed251c324b71423876ff63a654d53",
+  "pins" : [
+    {
+      "identity" : "zstd",
+      "kind" : "remoteSourceControl",
+      "location" : "https://gitee.com/yanshouwang/zstd.git",
+      "state" : {
+        "branch" : "darwin-v1.5.7",
+        "revision" : "015d6a3ec25facca35046dc1e5e8f044d065f502"
+      }
+    }
+  ],
+  "version" : 3
+}

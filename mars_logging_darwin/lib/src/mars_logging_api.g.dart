@@ -15,26 +15,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-enum AppenderModeApi {
-  async,
-  sync,
-}
+enum AppenderModeApi { async, sync }
 
-enum XLogLevelApi {
-  all,
-  verbose,
-  debug,
-  info,
-  warning,
-  error,
-  fatal,
-  none,
-}
+enum XLogLevelApi { all, verbose, debug, info, warning, error, fatal, none }
 
-enum CompressModeApi {
-  zlib,
-  zstd,
-}
+enum CompressModeApi { zlib, zstd }
 
 enum CompressLevelApi {
   level1,
@@ -48,7 +33,6 @@ enum CompressLevelApi {
   level9,
 }
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -56,16 +40,16 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is AppenderModeApi) {
+    } else if (value is AppenderModeApi) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is XLogLevelApi) {
+    } else if (value is XLogLevelApi) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is CompressModeApi) {
+    } else if (value is CompressModeApi) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is CompressLevelApi) {
+    } else if (value is CompressLevelApi) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
     } else {
@@ -76,16 +60,16 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : AppenderModeApi.values[value];
-      case 130: 
+      case 130:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : XLogLevelApi.values[value];
-      case 131: 
+      case 131:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : CompressModeApi.values[value];
-      case 132: 
+      case 132:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : CompressLevelApi.values[value];
       default:
@@ -98,23 +82,55 @@ class XLogHostApi {
   /// Constructor for [XLogHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  XLogHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  XLogHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix =
+           messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> open(AppenderModeApi mode, XLogLevelApi level, String logsDir, String cacheDir, int cacheDays, String namePrefix, CompressModeApi compressMode, CompressLevelApi compressLevel, String pubKey, bool useConsole, int maxFileSize, int maxAliveDuration) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.open$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[mode, level, logsDir, cacheDir, cacheDays, namePrefix, compressMode, compressLevel, pubKey, useConsole, maxFileSize, maxAliveDuration]);
+  Future<void> open(
+    AppenderModeApi mode,
+    XLogLevelApi level,
+    String logsDir,
+    String cacheDir,
+    int cacheDays,
+    String namePrefix,
+    CompressModeApi compressMode,
+    CompressLevelApi compressLevel,
+    String pubKey,
+    bool useConsole,
+    int maxFileSize,
+    int maxAliveDuration,
+  ) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.open$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
+        .send(<Object?>[
+          mode,
+          level,
+          logsDir,
+          cacheDir,
+          cacheDays,
+          namePrefix,
+          compressMode,
+          compressLevel,
+          pubKey,
+          useConsole,
+          maxFileSize,
+          maxAliveDuration,
+        ]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -131,13 +147,17 @@ class XLogHostApi {
   }
 
   Future<void> flush(bool isSync) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.flush$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.flush$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[isSync],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[isSync]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -154,12 +174,14 @@ class XLogHostApi {
   }
 
   Future<void> close() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.close$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.close$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -177,13 +199,17 @@ class XLogHostApi {
   }
 
   Future<void> verbose(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.verbose$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.verbose$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -200,13 +226,17 @@ class XLogHostApi {
   }
 
   Future<void> debug(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.debug$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.debug$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -223,13 +253,17 @@ class XLogHostApi {
   }
 
   Future<void> info(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.info$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.info$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -246,13 +280,17 @@ class XLogHostApi {
   }
 
   Future<void> warning(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.warning$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.warning$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -269,13 +307,17 @@ class XLogHostApi {
   }
 
   Future<void> error(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.error$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.error$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -292,13 +334,17 @@ class XLogHostApi {
   }
 
   Future<void> fatal(String tag, String message) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.fatal$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.mars_logging_darwin.XLogHostApi.fatal$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[tag, message],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tag, message]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
