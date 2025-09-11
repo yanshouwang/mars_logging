@@ -1,3 +1,8 @@
+## 1.0.0-dev.3
+
+* Fix crash on Android
+* Fix decrypt failed issue caused by BigInt.toUintList()
+
 ## 1.0.0-dev.2
 
 * Upgrade zstd dependency

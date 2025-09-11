@@ -1,3 +1,7 @@
+## 1.0.0-dev.3
+
+* Fix crash on Android
+
 ## 1.0.0-dev.2
 
 * Bump version

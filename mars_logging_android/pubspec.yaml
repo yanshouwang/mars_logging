@@ -1,6 +1,6 @@
 name: mars_logging_android
 description: 'Android implementation of the mars_logging plugin.'
-version: 1.0.0-dev.2
+version: 1.0.0-dev.3
 repository: 'https://github.com/yanshouwang/mars_logging'
 issue_tracker: 'https://github.com/yanshouwang/mars_logging/issues'
 topics:
@@ -15,7 +15,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  mars_logging_platform_interface: ^1.0.0-dev.2
+  mars_logging_platform_interface: ^1.0.0-dev.3
 
 dev_dependencies:
   flutter_test:
