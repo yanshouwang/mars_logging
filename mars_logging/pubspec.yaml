@@ -1,6 +1,6 @@
 name: mars_logging
 description: 'Mars integration for logging package.'
-version: 1.0.0-dev.1
+version: 1.0.0-dev.2
 repository: 'https://github.com/yanshouwang/mars_logging'
 issue_tracker: 'https://github.com/yanshouwang/mars_logging/issues'
 topics:
@@ -15,12 +15,12 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  mars_logging_platform_interface: ^1.0.0-dev.1
-  mars_logging_android: ^1.0.0-dev.1
-  mars_logging_darwin: ^1.0.0-dev.1
+  mars_logging_platform_interface: ^1.0.0-dev.2
+  mars_logging_android: ^1.0.0-dev.2
+  mars_logging_darwin: ^1.0.0-dev.2
   logging: ^1.3.0
   convert: ^3.1.2
-  zstd: ^0.0.1-dev.1
+  zstd: ^0.0.1-dev.2
   pointycastle: ^4.0.0
   path: ^1.9.1
   cross_file: ^0.3.4+2

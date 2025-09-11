@@ -1,6 +1,6 @@
 name: mars_logging_platform_interface
 description: 'A common platform interface for the mars_logging plugin.'
-version: 1.0.0-dev.1
+version: 1.0.0-dev.2
 repository: 'https://github.com/yanshouwang/mars_logging'
 issue_tracker: 'https://github.com/yanshouwang/mars_logging/issues'
 topics:

@@ -1,3 +1,7 @@
+## 1.0.0-dev.2
+
+* Upgrade zstd dependency
+
 ## 1.0.0-dev.1
 
 * Add compressMode, compressLevel, pubKey, maxFileSize & maxAliveDuration
