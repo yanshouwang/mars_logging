@@ -234,8 +234,8 @@ int decodeBuffer(
         );
         final ecPubKey = ECPublicKey(
           ecParams.curve.createPoint(
-            ecPubKeyX.toBigInt(),
-            ecPubKeyY.toBigInt(),
+            ecPubKeyX.toBigInt(Endian.big),
+            ecPubKeyY.toBigInt(Endian.big),
           ),
           ecParams,
         );
