@@ -54,13 +54,15 @@ public class Log {
 
         void appenderOpen(int level, int mode, String cacheDir, String logDir, String nameprefix, int cacheDays);
 
+        void appenderOpen(int mode, int level, String logDir, String cacheDir, int cacheDays, String nameprefix, int compressMode, int compressLevel, String pubKey);
+
         void appenderClose();
 
         void appenderFlush(long logInstancePtr, boolean isSync);
 
         void setConsoleLogOpen(long logInstancePtr, boolean isOpen);
 
-        void setMaxFileSize(long logInstancePtr, long aliveSeconds);
+        void setMaxFileSize(long logInstancePtr, long maxFileSize);
 
         void setMaxAliveTime(long logInstancePtr, long aliveSeconds);
 
@@ -154,6 +156,11 @@ public class Log {
         }
 
         @Override
+        public void appenderOpen(int mode, int level, String logDir, String cacheDir, int cacheDays, String nameprefix, int compressMode, int compressLevel, String pubKey) {
+
+        }
+
+        @Override
         public void appenderClose() {
 
         }
@@ -173,7 +180,7 @@ public class Log {
         }
 
         @Override
-        public void setMaxFileSize(long logInstancePtr, long aliveSeconds) {
+        public void setMaxFileSize(long logInstancePtr, long maxFileSize) {
 
         }
 
@@ -192,6 +199,12 @@ public class Log {
     public static void appenderOpen(int level, int mode, String cacheDir, String logDir, String nameprefix, int cacheDays) {
         if (logImp != null) {
             logImp.appenderOpen(level, mode, cacheDir, logDir, nameprefix, cacheDays);
+        }
+    }
+
+    public static void appenderOpen(int mode, int level, String logDir, String cacheDir, int cacheDays, String nameprefix, int compressMode, int compressLevel, String pubKey) {
+        if (logImp != null) {
+            logImp.appenderOpen(mode, level, logDir, cacheDir, cacheDays, nameprefix, compressMode, compressLevel, pubKey);
         }
     }
 
@@ -239,6 +252,18 @@ public class Log {
     public static void setConsoleLogOpen(boolean isOpen) {
         if (logImp != null) {
             logImp.setConsoleLogOpen(0, isOpen);
+        }
+    }
+
+    public static void setMaxFileSize(long maxFileSize) {
+        if (logImp != null) {
+            logImp.setMaxFileSize(0, maxFileSize);
+        }
+    }
+
+    public static void setMaxAliveTime(long aliveSeconds) {
+        if (logImp != null) {
+            logImp.setMaxAliveTime(0, aliveSeconds);
         }
     }
 

@@ -22,21 +22,21 @@ object XLog {
         System.loadLibrary("marsxlog")
 
         val imp = Xlog()
-        imp.setConsoleLogOpen(0, useConsole)
-        imp.setMaxFileSize(0, maxFileSize)
-        imp.setMaxAliveTime(0, maxAliveDuration)
-        val config = Xlog.XLogConfig()
-        config.mode = mode.value
-        config.level = level.value
-        config.logdir = logsDir
-        config.cachedir = cacheDir
-        config.cachedays = cacheDays
-        config.nameprefix = namePrefix
-        config.compressmode = compressMode.value
-        config.compresslevel = compressLevel.value
-        config.pubkey = pubKey
-        appenderOpen(config)
         Log.setLogImp(imp)
+        Log.setConsoleLogOpen(useConsole)
+        Log.setMaxFileSize(maxFileSize)
+        Log.setMaxAliveTime(maxAliveDuration)
+        Log.appenderOpen(
+            mode.value,
+            level.value,
+            logsDir,
+            cacheDir,
+            cacheDays,
+            namePrefix,
+            compressMode.value,
+            compressLevel.value,
+            pubKey
+        )
     }
 
     fun flush(isSync: Boolean) {
@@ -70,6 +70,4 @@ object XLog {
     fun fatal(tag: String, message: String) {
         Log.f(tag, message)
     }
-
-    private external fun appenderOpen(config: Xlog.XLogConfig)
 }
