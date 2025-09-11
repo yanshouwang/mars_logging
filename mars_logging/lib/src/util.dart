@@ -11,9 +11,25 @@ extension IntListX on List<int> {
 }
 
 extension BitIntX on BigInt {
-  Uint8List toUint8List() {
-    final encoded = toRadixString(16);
-    return hex.decode(encoded).toUint8List();
+  Uint8List toUint8List([Endian endian = Endian.little]) {
+    // var text = toRadixString(16);
+    // if (text.length.isOdd) {
+    //   text = '0$text';
+    // }
+    // var elements = hex.decode(text);
+    // if (endian == Endian.little) {
+    //   elements = elements.reversed.toList();
+    // }
+    var temp = this;
+    final length = (temp.bitLength + 7) >> 3;
+    var elements = List.filled(length, 0);
+    final mask = BigInt.from(0xff);
+    for (int i = 0; i < length; i++) {
+      final index = endian == Endian.little ? i : length - i - 1;
+      elements[index] = (temp & mask).toInt();
+      temp = temp >> 8;
+    }
+    return elements.toUint8List();
   }
 }
 

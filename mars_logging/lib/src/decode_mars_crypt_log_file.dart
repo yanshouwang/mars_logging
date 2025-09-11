@@ -242,7 +242,9 @@ int decodeBuffer(
         final ecD = BigInt.parse(privKey, radix: 16);
         final ecPrivKey = ECPrivateKey(ecD, ecParams);
         final ecAgreement = ECDHBasicAgreement()..init(ecPrivKey);
-        final teaKey = ecAgreement.calculateAgreement(ecPubKey).toUint8List();
+        final teaKey = ecAgreement
+            .calculateAgreement(ecPubKey)
+            .toUint8List(Endian.big);
 
         tmpBuffer = teaDecrypt(tmpBuffer, teaKey);
         if (magicStart == kMagicCompressStart2) {
